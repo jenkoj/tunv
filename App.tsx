@@ -3,8 +3,14 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
+
+//import useColorScheme from './hooks/useColorScheme';
+
+import { AppearanceProvider,useColorScheme } from 'react-native-appearance';
+
+
 import Navigation from './navigation';
+
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -15,10 +21,13 @@ export default function App() {
   } else {
     
     return (
-      <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
-      </SafeAreaProvider>
+      <AppearanceProvider>
+        <SafeAreaProvider>
+          <Navigation colorScheme={colorScheme} />
+          <StatusBar />
+        </SafeAreaProvider>
+      </AppearanceProvider>
+
     );
   }
 }

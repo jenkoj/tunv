@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+
+import { Text, View } from '../components/Themed';
 
 import * as firebase from 'firebase';
 
@@ -119,7 +121,7 @@ export default class App extends React.Component{
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    //backgroundColor: '#fff',
     //alignItems: 'center',
     justifyContent: 'center',
     padding: 10,

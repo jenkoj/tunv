@@ -4,7 +4,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
 import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
+//import useColorScheme from '../hooks/useColorScheme';
+import { useColorScheme } from 'react-native-appearance';
+import LoginScreen from '../screens/loginScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import TabThreeScreen from '../screens/TabThreeScreen';
@@ -17,24 +19,24 @@ export default function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="login"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
       <BottomTab.Screen
-        name="TabOne"
+        name="login"
         component={TabOneNavigator}
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
         }}
       />
       <BottomTab.Screen
-        name="Pour Coffee"
+        name="maps"
         component={TabTwoNavigator}
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
         }}
       />
       <BottomTab.Screen
-        name="Cat Caffe!"
+        name="more"
         component={TabThreeNavigator}
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
@@ -59,8 +61,8 @@ function TabOneNavigator() {
     <TabOneStack.Navigator>
       <TabOneStack.Screen
         name="TabOneScreen"
-        component={TabOneScreen}
-        options={{ headerTitle: 'Catto' }}
+        component={LoginScreen}
+        options={{ headerTitle: 'Login page' }}
       />
     </TabOneStack.Navigator>
   );
@@ -74,7 +76,7 @@ function TabTwoNavigator() {
       <TabTwoStack.Screen
         name="TabTwoScreen"
         component={TabTwoScreen}
-        options={{ headerTitle: 'Pour Me Some Coffe' }}
+        options={{ headerTitle: 'Device location' }}
       />
     </TabTwoStack.Navigator>
   );
@@ -88,7 +90,7 @@ function TabThreeNavigator() {
       <TabThreeStack.Screen
         name="TabThreeScreen"
         component={TabThreeScreen}
-        options={{ headerTitle: 'Testiram nov tab' }}
+        options={{ headerTitle: 'Settings' }}
       />
     </TabThreeStack.Navigator>
   );
