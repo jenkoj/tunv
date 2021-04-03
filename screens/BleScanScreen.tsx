@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
+  Text,
   FlatList,
   SafeAreaView,
   StatusBar,
@@ -9,11 +10,13 @@ import {
 } from 'react-native';
 import {Device, State} from 'react-native-ble-plx';
 import {Header, ListItem, ThemeProvider} from 'react-native-elements';
+import { useColorScheme } from 'react-native-appearance';
+
 import scanner from '../components/ble/scanner';
 
 declare var global: {HermesInternal: null | {}};
 
-const DEVICE_LIST_LIMIT = 50;
+const DEVICE_LIST_LIMIT = 10;
 
 const BleScanner = () => {
   const [bleState, setBleState] = useState(State.Unknown);
@@ -57,9 +60,10 @@ const BleScanner = () => {
     }
   }, [started, start, stop]);
 
+  let colorScheme = useColorScheme();
+
   return (
-    <ThemeProvider>
-      <StatusBar barStyle="dark-content" />
+   <ThemeProvider useDark={colorScheme === 'dark'}>
       <SafeAreaView style={styles.container}>
         <Header
           centerComponent={{text: 'BLE Scanner', style: {color: '#fff'}}}
@@ -74,8 +78,8 @@ const BleScanner = () => {
           }
         />
         <View style={styles.statusPanel}>
-          <ListItem title={'BLE Status'} subtitle={bleState} bottomDivider />
-          <ListItem title={'Last Error'} subtitle={error} bottomDivider />
+      
+          <ListItem title={'Last Error'} subtitle={error} bottomDivide><Text style={styles.titleText}>{bleState}</Text></ListItem > 
         </View>
         <View style={styles.list}>
           <FlatList
@@ -87,7 +91,9 @@ const BleScanner = () => {
                 title={item.name || ''}
                 subtitle={`RSSI: ${item.rssi}`}
                 bottomDivider
-              />
+              >
+                <Text style={styles.titleText}>{item.name || ''}{`RSSI: ${item.rssi}`}</Text>
+              </ListItem>
             )}
             keyExtractor={(_, index) => index.toString()}
           />
@@ -100,13 +106,23 @@ const BleScanner = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  
   },
   statusPanel: {
+    color: "white",
+    backgroundColor: '#000',
     flex: 0,
-    marginBottom: 15,
+    marginBottom: 15
   },
   list: {
     flex: 1,
+    color: "red",
+    backgroundColor: '#000'
+  },
+  titleText: {
+    color:"white",
+    fontSize: 20,
+    fontWeight: "bold"
   },
 });
 
