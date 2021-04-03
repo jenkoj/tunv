@@ -7,6 +7,7 @@ import Colors from '../constants/Colors';
 //import useColorScheme from '../hooks/useColorScheme';
 import { useColorScheme } from 'react-native-appearance';
 import LoginScreen from '../screens/loginScreen';
+import BleScreen from '../screens/BleScanScreen'
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import TabThreeScreen from '../screens/TabThreeScreen';
@@ -89,7 +90,7 @@ function TabThreeNavigator() {
     <TabThreeStack.Navigator>
       <TabThreeStack.Screen
         name="TabThreeScreen"
-        component={TabThreeScreen}
+        component={BleScreen}
         options={{ headerTitle: 'Settings' }}
       />
     </TabThreeStack.Navigator>

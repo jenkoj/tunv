@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {Device, State} from 'react-native-ble-plx';
 import {Header, ListItem, ThemeProvider} from 'react-native-elements';
-import scanner from './scanner';
+import scanner from '../components/ble/scanner';
 
 declare var global: {HermesInternal: null | {}};
 
