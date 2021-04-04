@@ -12,6 +12,7 @@ export interface Observer {
  */
 export default () => {
   const bleManager = new BleManager();
+
   // also acts as 'started' flag
   let subscription: Subscription | null = null;
   // stores external observer callbacks
@@ -23,6 +24,8 @@ export default () => {
   };
 
   const observe = (newObserver: Observer) => (observer = newObserver);
+
+  let peripheralId: string;
 
   const start = () => {
     if (subscription) {
@@ -75,9 +78,65 @@ export default () => {
     }
   };
 
+ 
+  const conn = (id: string) => {
+    console.log(id)
+
+    console.log('isConneting:',id);      
+    return new Promise( (resolve, reject) =>{
+      bleManager.connectToDevice(id)
+            .then(device=>{                           
+                console.log('connect success:',device.name,device.id);    
+                peripheralId = device.id;       
+                resolve(device);
+                return device.discoverAllServicesAndCharacteristics();
+            })
+            .then(device=>{
+                return fetchServicesAndCharacteristicsForDevice(device)
+            })
+            .then(services=>{
+                console.log('fetchServicesAndCharacteristicsForDevice',services);    
+                getUUID(services);                              
+            })
+            .catch(err=>{
+                console.log('connect fail: ',err);
+                reject(err);                    
+            })
+    });
+
+
+
+  };
+
+  function disconn() {
+    return new Promise( (resolve, reject) =>{
+      bleManager.cancelDeviceConnection(peripheralId)
+          .then(res=>{
+              console.log('disconnect success',res);
+              resolve(res);
+          })
+          .catch(err=>{
+              reject(err);
+              console.log('disconnect fail',err);
+          })     
+  });
+  }
+
+
   return {
     start,
     stop,
     observe,
+    conn,
+    disconn,
   };
 };
+
+function fetchServicesAndCharacteristicsForDevice(device: Device): any {
+  console.log(device)
+  return ('Do something here');
+}
+function getUUID(services: any) {
+  return ('Function not implemented.');
+}
+

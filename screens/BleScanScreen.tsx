@@ -7,9 +7,10 @@ import {
   StyleSheet,
   Switch,
   View,
+  DatePickerIOSComponent,
 } from 'react-native';
 import {Device, State} from 'react-native-ble-plx';
-import {Header, ListItem, ThemeProvider} from 'react-native-elements';
+import {Header, ListItem, ThemeProvider, Input} from 'react-native-elements';
 import { useColorScheme } from 'react-native-appearance';
 
 import scanner from '../components/ble/scanner';
@@ -22,9 +23,9 @@ const BleScanner = () => {
   const [bleState, setBleState] = useState(State.Unknown);
   const [error, setError] = useState<any>('-');
   const [started, setStarted] = useState<boolean>(false);
-  const [devices, setDevices] = useState<Device[]>([]);
+  const [devices, setDevices] = useState<Device[]>([]); 
 
-  const {start, stop, observe} = useMemo(() => scanner(), []);
+  const {start, stop, observe, conn, disconn} = useMemo(() => scanner(), []);
 
   useEffect(() => {
     // register observer functions
@@ -50,7 +51,7 @@ const BleScanner = () => {
   }, [observe, setStarted, setBleState, setDevices, devices, setError]);
 
   useEffect(() => setError(''), [started]);
-
+  
   const toggleStarted = useCallback(() => {
     console.log('toggleStarted');
     if (started) {
@@ -59,6 +60,25 @@ const BleScanner = () => {
       start();
     }
   }, [started, start, stop]);
+
+  
+
+  const [selID, setSelID] = useState<string>("2990B662-8D67-A979-808F-F3840A84E48A");
+  const [startedConn, setStartedConn] = useState(false);
+
+  useEffect(() => setError(''), [startedConn]);
+
+  const toggleConn = useCallback(() => { 
+    if (!startedConn) {
+      console.log('connecting');
+      setStartedConn(true);
+      conn(selID);
+    } else {
+      console.log('disconnecting');
+      setStartedConn(false);
+      disconn();
+    }
+  }, [startedConn]);
 
   let colorScheme = useColorScheme();
 
@@ -78,16 +98,29 @@ const BleScanner = () => {
           }
         />
         <View style={styles.statusPanel}>
-      
           <ListItem title={'Last Error'} subtitle={error} bottomDivide><Text style={styles.titleText}>{bleState}</Text></ListItem > 
         </View>
+
+        <View style={styles.statusPanel}>
+          <Text style={styles.titleText}>connect to device</Text>
+          <Switch
+              trackColor={{false: '#000', true: '#fff'}}
+              thumbColor={startedConn ? '#f5dd4b' : '#f4f3f4'}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={toggleConn}
+              value={startedConn}
+            />
+            <Input onChangeText={setSelID} value={selID} placeholder='enter UUID'/>
+            <Text style={styles.titleText}>{selID}</Text>
+        </View>
+        
         <View style={styles.list}>
           <FlatList
             style={styles.list}
             data={devices}
             renderItem={({item, index}) => (
               <ListItem
-                key={index}
+                key={index} 
                 title={item.name || ''}
                 subtitle={`RSSI: ${item.rssi}`}
                 bottomDivider
@@ -111,7 +144,7 @@ const styles = StyleSheet.create({
   },
   statusPanel: {
     color: "white",
-    backgroundColor: '#000',
+    backgroundColor: 'black',
     flex: 0,
     marginBottom: 15
   },
@@ -122,8 +155,9 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color:"white",
-    fontSize: 20,
-    fontWeight: "bold"
+    fontSize: 13,
+    fontWeight: "bold",
+    
   },
 });
 
