@@ -38,7 +38,7 @@ const BleScanner = () => {
         setBleState(changedBleState);
       },
       onDeviceDetected: (device: Device) => {
-        console.log('device:', device.id, device.name, device.rssi);
+        console.log('device:', device.id, device.name, device.rssi, device.serviceUUIDs);
         // insert at front, remove last items if list is too long
         setDevices([device].concat(devices.slice(0, DEVICE_LIST_LIMIT)));
       },
@@ -92,7 +92,8 @@ const BleScanner = () => {
                 subtitle={`RSSI: ${item.rssi}`}
                 bottomDivider
               >
-                <Text style={styles.titleText}>{item.name || ''}{`RSSI: ${item.rssi}`}</Text>
+                <Text style={styles.titleText}>{item.name || ' '}{` RSSI: ${item.rssi}`|| ' '}{` ID: ${item.id}`}</Text>
+                <Text style={styles.titleText}>{item.isConnectable}</Text>
               </ListItem>
             )}
             keyExtractor={(_, index) => index.toString()}
