@@ -14,6 +14,7 @@ export interface Observer {
 export default () => {
   const bleManager = new BleManager();
 
+  
   // also acts as 'started' flag
   let subscription: Subscription | null = null;
   // stores external observer callbacks
@@ -24,9 +25,12 @@ export default () => {
     onError: () => {},
   };
 
+  
   const observe = (newObserver: Observer) => (observer = newObserver);
 
   let peripheralId: string;
+
+  const deviceVals = (vals: any, services: any) => { return { vals: vals, services: services } }
 
   const start = () => {
     if (subscription) {
@@ -81,14 +85,16 @@ export default () => {
 
  
   const conn = (id: string) => {
-    console.log(id)
+    console.log(id);
 
     console.log('isConneting:',id);      
     return new Promise( (resolve, reject) =>{
       bleManager.connectToDevice(id)
             .then(device=>{                           
-                console.log('connect success:',device.name,device.id);    
-                peripheralId = device.id;       
+                console.log('connect success:',device.name,device.id);
+                alert("connected");
+                peripheralId = device.id;
+                deviceVals.vals = device;       
                 resolve(device);
                 return device.discoverAllServicesAndCharacteristics();
     
@@ -97,11 +103,13 @@ export default () => {
                 return fetchServicesAndCharacteristicsForDevice(device)
             })
             .then(services=>{
+                deviceVals.services = services;
                 console.log('get uuid',services);    
                 getUUID(services);                              
             })
             .catch(err=>{
                 console.log('connect fail: ',err);
+                alert("Can not connect");
                 reject(err);                    
             })
     });
@@ -123,28 +131,25 @@ export default () => {
   }
 
 
-  function read(id:string, index: number){
+  function read(){
   
-    let serviceUUID = "0000180f-0000-1000-8000-00805f9b34fb"
-    let charUUID = "00002a19-0000-1000-8000-00805f9b34fb"
-  
-    //console.log("service UUID: ",bleManager. )
-    // let serviceUUID = "ade3d529-c784-4f63-a987-eb69f70ee816"
-    // let charUUID = "e9241982-4580-42c4-8831-95048216b256"
-    // return new Promise( (resolve, reject) =>{
-    //     bleManager.readCharacteristicForDevice(id,serviceUUID, charUUID)
-    //         .then(characteristic=>{                    
-    //             let buffer = Buffer.from(characteristic.value,'base64');  
-    //             // let value = buffer.toString();       
-    //             const value = byteToString(buffer);          
-    //             console.log('read success', buffer, value);
-    //             resolve(value);     
-    //         },error=>{
-    //             console.log('read fail: ',error);
-    //             alert('read fail: ' + error.reason);
-    //             reject(error);
-    //         })
-    // });
+    console.log("Pref ID: ", deviceVals.vals.id );
+    console.log("Device charasteistic ", deviceVals.services.readCharacteristicUUID.toString() );
+    console.log("Device serviceIDS: ", deviceVals.services.readServiceUUID.toString() )  
+
+    return new Promise( (resolve, reject) =>{
+        bleManager.readCharacteristicForDevice(deviceVals.vals.id, deviceVals.services.readServiceUUID.toString(), deviceVals.services.readCharacteristicUUID.toString())
+            .then(characteristic=>{                    
+                let buffer = Buffer.from(characteristic.value,'base64'); 
+                let bleValue = buffer.toJSON().data.toString()      
+                //console.log('read success',bleValue );
+                resolve(bleValue);  
+            },error=>{
+                console.log('read fail: ',error);
+                alert('read fail: ' + error.reason);
+                reject(error);
+            })
+    });
 }
 
 

@@ -63,11 +63,12 @@ const BleScanner = () => {
 
   
 
-  const [selID, setSelID] = useState<string>("C70B62C5-720E-20DF-E042-1941F422CECE");
+  const [selID, setSelID] = useState<string>("17F59367-027E-401D-28C6-44CC608B7B1C");
   const [startedConn, setStartedConn] = useState(false);
   //button
   const [startedRead] = useState(false);
-
+  //
+  let [BleReadVal,onBleValueChange] = useState<any>(0);
 
   useEffect(() => setError(''), [startedConn]);
 
@@ -83,10 +84,16 @@ const BleScanner = () => {
     }
   }, [startedConn]);
 
+  let ReadFromBle;
 
   const setStartedRead = useCallback(() => { 
    console.log("pressed")
-   read(selID,1)
+   read().then(response=>{
+    console.log("temp: ", response);
+    BleReadVal = response;
+    onBleValueChange(response);
+   });
+   
   }, [startedRead]);
 
   let colorScheme = useColorScheme();
@@ -119,7 +126,7 @@ const BleScanner = () => {
               onValueChange={toggleConn}
               value={startedConn}
             />
-            <Input onChangeText={setSelID} value={selID} placeholder='enter UUID'/>
+            <Text style={styles.titleText}>Device to connect to: </Text>
             <Text style={styles.titleText}>{selID}</Text>
         </View>
 
@@ -131,9 +138,8 @@ const BleScanner = () => {
             success
             onPress={setStartedRead}
           >
-            <Text style={styles.titleText}>read from device</Text>
           </Button>
-           
+          <Text style={styles.titleText}>value from sensor: {BleReadVal}</Text>
         </View>
         
         <View style={styles.list}>
@@ -141,11 +147,15 @@ const BleScanner = () => {
             style={styles.list}
             data={devices}
             renderItem={({item, index}) => (
-              <ListItem
-            
+              <ListItem 
+
+    
+                button onPress={() => {setSelID(item.id)}}
+
                 key={index} 
                 title={item.name || ''}
                 subtitle={`RSSI: ${item.rssi}`}
+                
                 bottomDivider
               >
                 <Text style={styles.titleText}>{item.name || ' '}{` RSSI: ${item.rssi}`|| ' '}{` ID: ${item.id}`}</Text>
