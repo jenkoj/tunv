@@ -10,7 +10,7 @@ import {
   DatePickerIOSComponent,
 } from 'react-native';
 import {Device, State} from 'react-native-ble-plx';
-import {Header, ListItem, ThemeProvider, Input} from 'react-native-elements';
+import {Header, ListItem, ThemeProvider, Input, Button} from 'react-native-elements';
 import { useColorScheme } from 'react-native-appearance';
 
 import scanner from '../components/ble/scanner';
@@ -25,7 +25,7 @@ const BleScanner = () => {
   const [started, setStarted] = useState<boolean>(false);
   const [devices, setDevices] = useState<Device[]>([]); 
 
-  const {start, stop, observe, conn, disconn} = useMemo(() => scanner(), []);
+  const {start, stop, observe, conn, disconn, read} = useMemo(() => scanner(), []);
 
   useEffect(() => {
     // register observer functions
@@ -63,8 +63,11 @@ const BleScanner = () => {
 
   
 
-  const [selID, setSelID] = useState<string>("2990B662-8D67-A979-808F-F3840A84E48A");
+  const [selID, setSelID] = useState<string>("C70B62C5-720E-20DF-E042-1941F422CECE");
   const [startedConn, setStartedConn] = useState(false);
+  //button
+  const [startedRead] = useState(false);
+
 
   useEffect(() => setError(''), [startedConn]);
 
@@ -79,6 +82,12 @@ const BleScanner = () => {
       disconn();
     }
   }, [startedConn]);
+
+
+  const setStartedRead = useCallback(() => { 
+   console.log("pressed")
+   read(selID,1)
+  }, [startedRead]);
 
   let colorScheme = useColorScheme();
 
@@ -113,6 +122,19 @@ const BleScanner = () => {
             <Input onChangeText={setSelID} value={selID} placeholder='enter UUID'/>
             <Text style={styles.titleText}>{selID}</Text>
         </View>
+
+        <View style={styles.containerButton}>
+          <Text style={styles.titleText}>read from device</Text>
+          <Button 
+            full
+            rounded
+            success
+            onPress={setStartedRead}
+          >
+            <Text style={styles.titleText}>read from device</Text>
+          </Button>
+           
+        </View>
         
         <View style={styles.list}>
           <FlatList
@@ -120,6 +142,7 @@ const BleScanner = () => {
             data={devices}
             renderItem={({item, index}) => (
               <ListItem
+            
                 key={index} 
                 title={item.name || ''}
                 subtitle={`RSSI: ${item.rssi}`}
@@ -139,9 +162,16 @@ const BleScanner = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   
   },
+  containerButton: {
+    flex: 0,
+    justifyContent: 'center',
+    padding: 30
+
+  },
+  
   statusPanel: {
     color: "white",
     backgroundColor: 'black',
