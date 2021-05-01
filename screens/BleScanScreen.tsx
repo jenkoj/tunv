@@ -25,7 +25,7 @@ const BleScanner = () => {
   const [started, setStarted] = useState<boolean>(false);
   const [devices, setDevices] = useState<Device[]>([]); 
 
-  const {start, stop, observe, conn, disconn, read} = useMemo(() => scanner(), []);
+  const {start, stop, observe, conn, disconn, read,write} = useMemo(() => scanner(), []);
 
   useEffect(() => {
     // register observer functions
@@ -65,6 +65,7 @@ const BleScanner = () => {
 
   const [selID, setSelID] = useState<string>("17F59367-027E-401D-28C6-44CC608B7B1C");
   const [startedConn, setStartedConn] = useState(false);
+  const [locked, setToggleLock] = useState(false);
   //button
   const [startedRead] = useState(false);
   //
@@ -95,6 +96,24 @@ const BleScanner = () => {
    });
    
   }, [startedRead]);
+
+  const toggleLock= useCallback(() => {
+    console.log('toggleStarted');
+    let state
+    if (locked) {
+      setToggleLock(false)
+      
+      write("1")
+      console.log("lock")
+    } else {
+      setToggleLock(true)
+      write("0")
+      console.log("unlock")
+    }
+  }, [locked]);
+
+
+
 
   let colorScheme = useColorScheme();
 
@@ -142,6 +161,18 @@ const BleScanner = () => {
           <Text style={styles.titleText}>value from sensor: {BleReadVal}</Text>
         </View>
         
+        <View style={styles.statusPanel}>
+          <Text style={styles.titleText}>toggle lock</Text>
+          <Switch
+              trackColor={{false: '#000', true: '#fff'}}
+              thumbColor={locked ? '#f5dd4b' : '#f4f3f4'}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={toggleLock}
+              value={locked}
+            />
+          
+        </View>
+
         <View style={styles.list}>
           <FlatList
             style={styles.list}

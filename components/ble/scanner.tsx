@@ -152,6 +152,26 @@ export default () => {
     });
 }
 
+function write(value:string){
+        
+  let Buffer = require("buffer").Buffer;
+  let formatValue = new Buffer(value).toString("base64");
+   
+  return new Promise( (resolve, reject) =>{      
+      bleManager.writeCharacteristicWithResponseForDevice(deviceVals.vals.id,deviceVals.services.writeWithResponseServiceUUID.toString(), 
+      deviceVals.services.writeWithResponseCharacteristicUUID.toString(),formatValue)
+          .then(characteristic=>{                    
+              console.log('write success',formatValue);
+              resolve(characteristic);
+          },error=>{
+              console.log('write fail: ',error);
+              alert('write fail: ',error.reason);
+              reject(error);
+          })
+  });
+}
+
+
 
   return {
     start,
@@ -160,6 +180,7 @@ export default () => {
     conn,
     disconn,
     read,
+    write,
   };
 };
 
