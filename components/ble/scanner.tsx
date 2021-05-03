@@ -30,6 +30,8 @@ export default () => {
 
   let peripheralId: string;
 
+  let lastDetectedDevice =  "0";
+
   const deviceVals = (vals: any, services: any) => { return { vals: vals, services: services } }
 
   const start = () => {
@@ -55,7 +57,14 @@ export default () => {
               }
 
               if (device) {
-                observer.onDeviceDetected(device);
+                
+                if (device.localName == "tap-lock" && device.id != lastDetectedDevice){
+                  //detect only arduino
+                  observer.onDeviceDetected(device);
+                  lastDetectedDevice = device.id
+                } 
+                
+                
               }
             });
           } catch (error) {
@@ -104,12 +113,15 @@ export default () => {
             })
             .then(services=>{
                 deviceVals.services = services;
-                console.log('get uuid',services);    
+
+                console.log('get uuid',services);
+    
                 getUUID(services);                              
             })
             .catch(err=>{
                 console.log('connect fail: ',err);
                 alert("Can not connect");
+
                 reject(err);                    
             })
     });
@@ -134,11 +146,11 @@ export default () => {
   function read(){
   
     console.log("Pref ID: ", deviceVals.vals.id );
-    console.log("Device charasteistic ", deviceVals.services.readCharacteristicUUID.toString() );
-    console.log("Device serviceIDS: ", deviceVals.services.readServiceUUID.toString() )  
+    console.log("Device charasteistic ", deviceVals.services.readCharacteristicUUID[0].toString() );
+    console.log("Device serviceIDS: ", deviceVals.services.readServiceUUID[0].toString() )  
 
     return new Promise( (resolve, reject) =>{
-        bleManager.readCharacteristicForDevice(deviceVals.vals.id, deviceVals.services.readServiceUUID.toString(), deviceVals.services.readCharacteristicUUID.toString())
+        bleManager.readCharacteristicForDevice(deviceVals.vals.id, deviceVals.services.readServiceUUID[0].toString(), deviceVals.services.readCharacteristicUUID[0].toString())
             .then(characteristic=>{                    
                 let buffer = Buffer.from(characteristic.value,'base64'); 
                 let bleValue = buffer.toJSON().data.toString()      

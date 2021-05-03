@@ -69,7 +69,7 @@ const BleScanner = () => {
   //button
   const [startedRead] = useState(false);
   //
-  let [BleReadVal,onBleValueChange] = useState<any>(0);
+  let [BleReadVal,onBleValueChange] = useState<any>("locked");
 
   useEffect(() => setError(''), [startedConn]);
 
@@ -86,13 +86,24 @@ const BleScanner = () => {
   }, [startedConn]);
 
   let ReadFromBle;
-
+  let lockStatus = "locked";
   const setStartedRead = useCallback(() => { 
    console.log("pressed")
    read().then(response=>{
-    console.log("temp: ", response);
-    BleReadVal = response;
-    onBleValueChange(response);
+    console.log("lock status: ", response);
+    
+
+    if (response == 0){
+      BleReadVal = "unlocked";     
+      console.log("locked: ", BleReadVal);
+
+    }else{
+      BleReadVal = "locked"
+      console.log("locked: ", BleReadVal);
+    }
+
+    onBleValueChange(BleReadVal);
+    console.log("status after val change: ", BleReadVal);
    });
    
   }, [startedRead]);
@@ -121,7 +132,7 @@ const BleScanner = () => {
    <ThemeProvider useDark={colorScheme === 'dark'}>
       <SafeAreaView style={styles.container}>
         <Header
-          centerComponent={{text: 'BLE Scanner', style: {color: '#fff'}}}
+          centerComponent={{text: 'Scan ble devices', style: {color: '#fff'}}}
           leftComponent={
             <Switch
               trackColor={{false: '#767577', true: '#81b0ff'}}
@@ -172,7 +183,7 @@ const BleScanner = () => {
             />
           
         </View>
-
+        <Text style={styles.titleText}>Available devices:</Text>
         <View style={styles.list}>
           <FlatList
             style={styles.list}
@@ -189,7 +200,7 @@ const BleScanner = () => {
                 
                 bottomDivider
               >
-                <Text style={styles.titleText}>{item.name || ' '}{` RSSI: ${item.rssi}`|| ' '}{` ID: ${item.id}`}</Text>
+                <Text style={styles.titleText}>{item.localName || ' '}</Text>
                 <Text style={styles.titleText}>{item.isConnectable}</Text>
               </ListItem>
             )}
