@@ -6,11 +6,14 @@ import * as React from 'react';
 import Colors from '../constants/Colors';
 //import useColorScheme from '../hooks/useColorScheme';
 import { useColorScheme } from 'react-native-appearance';
+import MapsScreen from '../screens/mapsScreen'
 import LoginScreen from '../screens/loginScreen';
+
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import TabThreeScreen from '../screens/TabThreeScreen';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList, TabThreeParamList } from '../types';
+import ListItem from '../components/ListItem';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -75,7 +78,7 @@ function TabTwoNavigator() {
     <TabTwoStack.Navigator>
       <TabTwoStack.Screen
         name="TabTwoScreen"
-        component={TabTwoScreen}
+        component={MapsScreen}
         options={{ headerTitle: 'Device location' }}
       />
     </TabTwoStack.Navigator>

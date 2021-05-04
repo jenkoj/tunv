@@ -1,3 +1,8 @@
+import {persistor, store} from './redux/store';
+
+import {PersistGate} from 'redux-persist/integration/react';
+import{Provider} from 'react-redux';
+
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -21,13 +26,16 @@ export default function App() {
   } else {
     
     return (
-      <AppearanceProvider>
-        <SafeAreaProvider>
-          <Navigation colorScheme={colorScheme} />
-          <StatusBar />
-        </SafeAreaProvider>
-      </AppearanceProvider>
-
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <AppearanceProvider>
+            <SafeAreaProvider>
+              <Navigation colorScheme={colorScheme} />
+              <StatusBar />
+            </SafeAreaProvider>
+          </AppearanceProvider>
+        </PersistGate>
+      </Provider>
     );
   }
 }

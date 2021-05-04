@@ -65,6 +65,7 @@ export default class App extends React.Component{
     .catch((error)=> {
         console.log(error.code);
         console.log(error.message);
+        alert("E-mail or password is invalid.")
       });
    
 
