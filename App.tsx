@@ -1,7 +1,3 @@
-import {persistor, store} from './redux/store';
-
-import {PersistGate} from 'redux-persist/integration/react';
-import{Provider} from 'react-redux';
 
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
@@ -26,16 +22,14 @@ export default function App() {
   } else {
     
     return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
+     
           <AppearanceProvider>
             <SafeAreaProvider>
               <Navigation colorScheme={colorScheme} />
               <StatusBar />
             </SafeAreaProvider>
           </AppearanceProvider>
-        </PersistGate>
-      </Provider>
+       
     );
   }
 }

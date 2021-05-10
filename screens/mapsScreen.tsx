@@ -1,35 +1,10 @@
 import * as React from 'react';
 import { StyleSheet, Alert, Text} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
-import {connect} from 'react-redux';
-import {setMarkerLocationAction} from '../redux/actions/markerAction';
-//import { Button } from 'react-native-paper';
-//import { Button } from 'reactstrap';
 
-const mapStateToProps = state => {
-  return {
-    marker: state.location,
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    setMarker: location => {
-      dispatch(setMarkerLocationAction(location));
-    },
-  };
-};
-/*
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(mapsScreen);
-*/
-const Connected = connect(mapStateToProps,mapDispatchToProps);
-
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class App extends React.Component {
-
 
 constructor(props) {
   super(props)
@@ -40,11 +15,14 @@ constructor(props) {
     longitude: 14.83770500,
     error: null,
     marker: null
+    
   }
 }
 
-
-  componentDidMount(){
+componentDidMount(){
+    console.log("fetching..")
+    this.getData()
+    console.log("...fin")
     navigator.geolocation.getCurrentPosition(position =>{
       this.setState({
         latitude: position.coords.latitude,
@@ -56,27 +34,45 @@ constructor(props) {
     { enableHighAccuracy: true, timeout:2000, maximumAge:2000}
     );
   }
-/*
-  savePosition = () => {
-    Alert.alert(
-      'Click ok to save location',
-      'test',
-      [
-        {
-          text:'Cancel',
-          style: 'Cancel'
-        },
-        {
-          text: 'ok'
-        }
-      ]
-    )
+
+storeData = async (value: string) => {
+  try {
+    const jsonValue = JSON.stringify(value)
+    await AsyncStorage.setItem('@location', jsonValue)
+  } catch (e) {
+    console.log("async store err!")
   }
-*/
+}
+
+getData = async () => {
+  try {
+    const jsonValue = await AsyncStorage.getItem('@location').then(() =>
+      console.log("read"!)
+    )
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+    
+  } catch(e) {
+    console.log("async read err!")    
+  }
+}
+
+
+setMarker = (location: any)  => {
+  //dispatch(setMarkerLocationAction(location));
+  console.log("data to be stored: ")
+  console.log(location);
+  console.log("stroing!........");
+  
+  this.storeData(location);
+  console.log("data",this.getData())
+  //console.log(data);
+  console.log("........stored!");
+}
+
 
 render(){
-  const {setMarker} = this.props;
-  const {location} = this.state;
+  //const {setMarker} = this.props;
+  const {marker} = this.state;
   return (
 
     <MapView
@@ -94,7 +90,7 @@ render(){
 
     onLongPress={(e) => this.setState({ marker: e.nativeEvent.coordinate, location: e.nativeEvent.coordinate})}
     //onMarkerPress={e => { console.log(e.nativeEvent.coordinate); }}
-    onMarkerPress={() => setMarker(location)}
+    onMarkerPress={() => this.setMarker(marker)}
     
     >
 
