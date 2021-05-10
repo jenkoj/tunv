@@ -9,7 +9,7 @@ import {storeData,getData} from "../storage/storageHandler.js"
 
 export default class App extends React.Component {
 
-constructor(props) {
+constructor(props: {} | Readonly<{}>) {
   super(props)
 
   this.state = {
@@ -39,7 +39,7 @@ componentDidMount(){
       console.log("latituude: ", data.latitude)
       console.log("...fin")
   
-    }).catch(err => {
+    }).catch((err: any) => {
         console.log(err)
   
     });
@@ -72,7 +72,7 @@ setMarker = (location: any)  => {
     console.log("longitude: ",result.longitude)
     console.log("latitude: ", result.latitude)
 
-  }).catch(err => {
+  }).catch((err: any) => {
       console.log(err)
 
   });
