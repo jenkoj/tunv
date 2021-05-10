@@ -3,6 +3,8 @@ import { StyleSheet, Alert, Text} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 
 import AsyncStorage from '@react-native-community/async-storage';
+import { resolveUri } from 'expo-asset/build/AssetSources';
+import { RESULTS } from 'react-native-permissions';
 
 export default class App extends React.Component {
 
@@ -20,9 +22,18 @@ constructor(props) {
 }
 
 componentDidMount(){
-    console.log("fetching..")
-    this.getData()
-    console.log("...fin")
+    console.log("fetching...")
+    this.getData().then((result: any)=> {
+      console.log("longitude: ",result.longitude)
+      console.log("latituude: ", result.latitude)
+      console.log("...fin")
+  
+    }).catch(err => {
+        console.log(err)
+  
+    });
+    //console.log(data)
+    
     navigator.geolocation.getCurrentPosition(position =>{
       this.setState({
         latitude: position.coords.latitude,
@@ -44,16 +55,35 @@ storeData = async (value: string) => {
   }
 }
 
-getData = async () => {
-  try {
-    const jsonValue = await AsyncStorage.getItem('@location').then(() =>
-      console.log("read"!)
-    )
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
+getData = () => {
+
+  return new Promise((resolve, reject) =>{
+    AsyncStorage.getItem('@location')
+     .then(data =>{
+      //console.log("read! data: ");
+      //console.log(data)
+       
+      data = (data != null)? JSON.parse(data) : null;
+
+      resolve(data)
+
+      return data
+
+     }).catch(err=>{
+      console.log('read fail: ',err);
+      reject(err);                    
+  })
+
+  })
+  // try {
+  // return await AsyncStorage.getItem('@location').then((data) =>{
+  //     console.log(data)
+  // })
+
     
-  } catch(e) {
-    console.log("async read err!")    
-  }
+  // } catch(e) {
+  //   console.log("async read err!")    
+  // }
 }
 
 
@@ -62,13 +92,27 @@ setMarker = (location: any)  => {
   console.log("data to be stored: ")
   console.log(location);
   console.log("stroing!........");
-  
-  this.storeData(location);
-  console.log("data",this.getData())
-  //console.log(data);
+  this.storeData(location);  
   console.log("........stored!");
+  
+  console.log("data stored: ")
+  
+  this.getData().then((result: any)=> {
+    console.log("longitude: ",result.longitude)
+    console.log("latitude: ", result.latitude)
+
+  }).catch(err => {
+      console.log(err)
+
+  });
+    
+
 }
 
+readMarkerLocation = async() => {
+  let data = await this.getData
+  return data
+}
 
 render(){
   //const {setMarker} = this.props;
