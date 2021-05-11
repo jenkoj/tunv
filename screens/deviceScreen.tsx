@@ -9,7 +9,7 @@ import {Device, State} from 'react-native-ble-plx';
 import {Header, ListItem, ThemeProvider, Input, Button} from 'react-native-elements';
 
 
-const tabThreeScreen = () => {
+const deviceScreen = () => {
   
   const [locked, setToggleLock] = useState(false);
   const [buttonStyle, setButtonStyle] = useState('red')
@@ -81,4 +81,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default tabThreeScreen;
+export default deviceScreen;
