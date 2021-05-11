@@ -4,10 +4,6 @@ import { Text, View } from '../components/Themed';
 import { Foundation } from '@expo/vector-icons'; 
 import { useColorScheme } from 'react-native-appearance';
 
-import {Device, State} from 'react-native-ble-plx';
-
-import {Header, ListItem, ThemeProvider, Input, Button} from 'react-native-elements';
-
 
 const deviceScreen = () => {
   
