@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons'; 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
@@ -12,7 +13,7 @@ import LoginScreen from '../screens/loginScreen';
 import BleScreen from '../screens/BleScanScreen'
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
-import TabThreeScreen from '../screens/TabThreeScreen';
+import deviceScreen from '../screens/deviceScreen';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList, TabThreeParamList } from '../types';
 import ListItem from '../components/ListItem';
 
@@ -26,24 +27,24 @@ export default function BottomTabNavigator() {
       initialRouteName="login"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
       <BottomTab.Screen
-        name="login"
+        name="devices"
         component={TabOneNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color }) =>  <FontAwesome name="lock" size={24} color={color} />,
         }}
       />
       <BottomTab.Screen
         name="maps"
         component={TabTwoNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome name="map-marker" size={24} color={color} />,
         }}
       />
       <BottomTab.Screen
-        name="more"
+        name="settings"
         component={TabThreeNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color }) => <Ionicons name="ios-settings-outline" size={24} color={color} />,
         }}
       />
     </BottomTab.Navigator>
@@ -64,9 +65,9 @@ function TabOneNavigator() {
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
-        name="TabOneScreen"
-        component={LoginScreen}
-        options={{ headerTitle: 'Login page' }}
+        name="deviceScreen"
+        component={deviceScreen}
+        options={{ headerTitle: 'Devices' }}
       />
     </TabOneStack.Navigator>
   );

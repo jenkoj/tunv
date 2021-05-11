@@ -5,7 +5,9 @@ import MapView, {Marker} from 'react-native-maps';
 import AsyncStorage from '@react-native-community/async-storage';
 import { resolveUri } from 'expo-asset/build/AssetSources';
 
-import {storeData,getData} from "../storage/storageHandler.js"
+import {storeData,getData} from "../storage/storageHandler"
+
+import Geolocation from '@react-native-community/geolocation';
 
 export default class App extends React.Component {
 
@@ -38,14 +40,13 @@ componentDidMount(){
       console.log("longitude: ",data.longitude)
       console.log("latituude: ", data.latitude)
       console.log("...fin")
-  
+            
     }).catch((err: any) => {
         console.log(err)
   
     });
-    //console.log(data)
     
-    navigator.geolocation.getCurrentPosition(position =>{
+    Geolocation.getCurrentPosition(position =>{
       this.setState({
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
