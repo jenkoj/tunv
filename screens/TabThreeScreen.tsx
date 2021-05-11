@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { Button, Pressable, StyleSheet } from 'react-native';
 import { Text, View } from '../components/Themed';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
@@ -15,7 +15,7 @@ const getBackgroundColor = (value) => {
 
 const getIcon = (value) => {
   let name;
-  if (value === 0) {
+  if (value === 1) {
       name = 'link';
   } else {
       name = 'times';
@@ -23,51 +23,62 @@ const getIcon = (value) => {
   return name;
 };
 
+const onPressButton = () => {
+  alert('You tapped the button!')
+}
+
 
 
 export default function TabThreeScreen() {
   return (
+
+
     <View style={styles.container}>
-      <View style={styles.bar}>
-        <View style={styles.icon}>
-          <FontAwesome5 name={getIcon(1)} size={20} color={'white'}/>
-        </View>
+      <View style={styles.buttonContainer}>
+        <Pressable
+          style={styles.button}
+          onPress={onPressButton}
+        >
+          <View style={styles.text}>
+            <Text>
+              TEST
+            </Text>
+          </View>
+          <View style={styles.icon}>
+            <FontAwesome5 name={getIcon(1)} size={20} color={'white'}/>
+          </View>
+        </Pressable>
       </View>
     </View>
+
+
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 10,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  bar: {
-    borderRadius: 3,
-    width: 200, 
-    height: 50, 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    backgroundColor: getBackgroundColor(0)
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+    justifyContent: 'center'
   },
   icon: {
-    alignSelf: 'flex-end',
-    margin: 10,
-    padding: 2,
-    borderRadius: 3,
-    backgroundColor: getBackgroundColor(0)
+    backgroundColor: getBackgroundColor(0),
   },
-  lock: {
-    alignSelf: 'flex-start',
+  button: {
+    borderRadius: 3,
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    backgroundColor: getBackgroundColor(0),
+    flexDirection: "row",
+    alignContent: "space-between",
+    height: 50,
+    width: 200,
+  },
+  text: {
+    backgroundColor: getBackgroundColor(0),
+    flex: 0.8,
+    fontSize:20,
   }
 });
