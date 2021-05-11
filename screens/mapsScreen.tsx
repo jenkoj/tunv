@@ -5,7 +5,7 @@ import MapView, {Marker} from 'react-native-maps';
 import AsyncStorage from '@react-native-community/async-storage';
 import { resolveUri } from 'expo-asset/build/AssetSources';
 
-import {storeData,getData} from "../storage/storageHandler.js"
+import {storeData,getData} from "../storage/storageHandler.jsx"
 
 export default class App extends React.Component {
 
@@ -17,8 +17,9 @@ constructor(props: {} | Readonly<{}>) {
     latitude: 46.11956480,
     longitude: 14.83770500,
     error: null,
-    marker: null
-    
+    marker: null,
+    latitudeMarker: 0,
+    longitudeMarker: 0,   
   }
 }
 
@@ -26,8 +27,8 @@ componentDidMount(){
     console.log("fetching...")
     getData().then((data: any)=> {
     
-    // this.state.longitude = result.longitude;
-    // this.state.latitude = result.longitude;
+     this.state.latitudeMarker = data.latitude;
+     this.state.longitudeMarker = data.longitude;
 
     this.setState({
               latitude: data.latitude,
@@ -36,8 +37,10 @@ componentDidMount(){
             })
 
       console.log("longitude: ",data.longitude)
-      console.log("latituude: ", data.latitude)
+      console.log("latituude: ",data.latitude)
       console.log("...fin")
+      
+
   
     }).catch((err: any) => {
         console.log(err)
@@ -103,16 +106,19 @@ render(){
     
     >
 
-     <Marker coordinate={{latitude: 46.142, longitude: 14.9689}} onPress={()=>console.log({location})}>
-      
-     </Marker>
+
+    <Marker 
+      coordinate={{ latitude : this.state.latitudeMarker , longitude : this.state.longitudeMarker }} 
+      pinColor={'blue'}
+      title={'LOKACIJA VAŠEGA KOLESA.'}
+    />  
 
 
     {
           this.state.marker &&
           <Marker 
             coordinate={this.state.marker}
-            title={'Bike'}  
+            title={'PODATKI O LOKACIJI SO SHRANJENI!'}  
           />
     }
 
@@ -122,16 +128,6 @@ render(){
   );
 }
 }
-
-
-/* 
-    <Marker
-        pinColor = '#0000FF' 
-        fixed
-        coordinate={this.state}
-        title={'You are here!'}
-    />
-*/
 
 const styles = StyleSheet.create({
   container: {

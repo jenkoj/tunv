@@ -13,16 +13,25 @@ const getBackgroundColor = (value) => {
   return color;
 };
 
+const getIcon = (value) => {
+  let name;
+  if (value === 0) {
+      name = 'link';
+  } else {
+      name = 'times';
+  }
+  return name;
+};
+
+
 
 export default function TabThreeScreen() {
   return (
     <View style={styles.container}>
-      <View style={[styles.bar, {width: 200, height: 50, alignItems: 'center', justifyContent: 'center', backgroundColor: getBackgroundColor(0)}]}>
-        <View>
-          <FontAwesome5 name={'link'} size={20} color={'white'}/>
+      <View style={styles.bar}>
+        <View style={styles.icon}>
+          <FontAwesome5 name={getIcon(1)} size={20} color={'white'}/>
         </View>
-        
-
       </View>
     </View>
   );
@@ -39,12 +48,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   bar: {
-    height: 20,
-    width: 20
+    borderRadius: 3,
+    width: 200, 
+    height: 50, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    backgroundColor: getBackgroundColor(0)
   },
   separator: {
     marginVertical: 30,
     height: 1,
     width: '80%',
   },
+  icon: {
+    alignSelf: 'flex-end',
+    margin: 10,
+    padding: 2,
+    borderRadius: 3,
+    backgroundColor: getBackgroundColor(0)
+  },
+  lock: {
+    alignSelf: 'flex-start',
+  }
 });
