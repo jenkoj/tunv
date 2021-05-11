@@ -1,60 +1,59 @@
-import * as React from 'react';
-import { Button, Pressable, StyleSheet } from 'react-native';
+import React,{useCallback, useEffect, useMemo, useState} from 'react';
+import { Pressable, StyleSheet } from 'react-native';
 import { Text, View } from '../components/Themed';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { Foundation } from '@expo/vector-icons'; 
+import { useColorScheme } from 'react-native-appearance';
 
-const getBackgroundColor = (value) => {
-  let color;
-  if (value === 0) {
-      color = 'green';
-  } else {
-      color = 'red';
-  }
-  return color;
-};
+import {Device, State} from 'react-native-ble-plx';
 
-const getIcon = (value) => {
-  let name;
-  if (value === 1) {
-      name = 'link';
-  } else {
-      name = 'times';
-  }
-  return name;
-};
-
-const onPressButton = () => {
-  alert('You tapped the button!')
-}
+import {Header, ListItem, ThemeProvider, Input, Button} from 'react-native-elements';
 
 
+const tabThreeScreen = () => {
+  
+  const [locked, setToggleLock] = useState(false);
+  const [buttonStyle, setButtonStyle] = useState('red')
+  const [iconStyle, setIconStyle] = useState('unlink')
 
-export default function TabThreeScreen() {
+  const toggleLock= useCallback(() => {
+    console.log('toggleStarted');
+    let state
+    if (locked) {
+      setToggleLock(false)
+      //setIconStyle("unlink")
+      setButtonStyle('green')
+      console.log("lock")
+    } else {
+      setToggleLock(true)
+      //setIconStyle("link")
+      setButtonStyle('red')
+      console.log("unlock")
+    }
+  }, [locked]);
+
+  
+  let colorScheme = useColorScheme();
+
   return (
-
-
-    <View style={styles.container}>
-      <View style={styles.buttonContainer}>
-        <Pressable
-          style={styles.button}
-          onPress={onPressButton}
-        >
-          <View style={styles.text}>
-            <Text>
-              TEST
-            </Text>
-          </View>
-          <View style={styles.icon}>
-            <FontAwesome5 name={getIcon(1)} size={20} color={'white'}/>
-          </View>
-        </Pressable>
-      </View>
+  <View style={styles.container}>
+    <View style={[styles.button,{ backgroundColor: buttonStyle }]}>
+      <Pressable
+        style={styles.button}
+        onPress={toggleLock}
+      >
+        <View style={[styles.text,{ backgroundColor: buttonStyle }]}>
+          <Text>
+            Bike
+          </Text>
+        </View>
+        <View style={[styles.icon,{ backgroundColor: buttonStyle }]}>
+           <Foundation name={iconStyle} size={24} color="white" />
+        </View>
+      </Pressable>
     </View>
-
-
-  );
+  </View>
+  )
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -64,21 +63,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   icon: {
-    backgroundColor: getBackgroundColor(0),
+  
   },
   button: {
     borderRadius: 3,
     alignItems: 'center', 
     justifyContent: 'center', 
-    backgroundColor: getBackgroundColor(0),
     flexDirection: "row",
     alignContent: "space-between",
     height: 50,
     width: 200,
   },
   text: {
-    backgroundColor: getBackgroundColor(0),
     flex: 0.8,
     fontSize:20,
   }
 });
+
+
+export default tabThreeScreen;
