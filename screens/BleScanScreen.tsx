@@ -45,7 +45,7 @@ const BleScanner = () => {
       },
       onError: (err) => {
         console.log('error', err);
-        setError(err.toString());
+        setError(err);
       },
     });
   }, [observe, setStarted, setBleState, setDevices, devices, setError]);
@@ -61,7 +61,6 @@ const BleScanner = () => {
     }
   }, [started, start, stop]);
 
-  
 
   const [selID, setSelID] = useState<string>("17F59367-027E-401D-28C6-44CC608B7B1C");
   const [startedConn, setStartedConn] = useState(false);
@@ -118,13 +117,10 @@ const BleScanner = () => {
       console.log("lock")
     } else {
       setToggleLock(true)
-      write("0")
+      write("1")
       console.log("unlock")
     }
   }, [locked]);
-
-
-
 
   let colorScheme = useColorScheme();
 

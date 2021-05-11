@@ -5,6 +5,7 @@ export interface Observer {
   onStarted: (started: boolean) => void;
   onStateChanged: (state: State) => void;
   onDeviceDetected: (device: Device) => void;
+  onDeviceConnected: (connected: boolean) => void;
   onError: (error: any) => void;
 }
 
@@ -14,7 +15,6 @@ export interface Observer {
 export default () => {
   const bleManager = new BleManager();
 
-  
   // also acts as 'started' flag
   let subscription: Subscription | null = null;
   // stores external observer callbacks
@@ -22,9 +22,10 @@ export default () => {
     onStarted: () => {},
     onStateChanged: () => {},
     onDeviceDetected: () => {},
+    onDeviceConnected: () => {},
     onError: () => {},
-  };
 
+  };
   
   const observe = (newObserver: Observer) => (observer = newObserver);
 
@@ -58,7 +59,9 @@ export default () => {
 
               if (device) {
                 
-                if (device.localName == "tap-lock" && device.id != lastDetectedDevice){
+                if (device.localName == "MI1S" && device.id != lastDetectedDevice){
+                //if (device.localName == "tap-lock" && device.id != lastDetectedDevice){
+                //if (device.id != lastDetectedDevice){
                   //detect only arduino
                   observer.onDeviceDetected(device);
                   lastDetectedDevice = device.id
@@ -95,13 +98,15 @@ export default () => {
  
   const conn = (id: string) => {
     console.log(id);
+    
 
-    console.log('isConneting:',id);      
+    console.log('isConneting:',id);    
     return new Promise( (resolve, reject) =>{
       bleManager.connectToDevice(id)
             .then(device=>{                           
                 console.log('connect success:',device.name,device.id);
-                alert("connected");
+                observer.onDeviceConnected(true)
+                //alert("connected");
                 peripheralId = device.id;
                 deviceVals.vals = device;       
                 resolve(device);
@@ -118,14 +123,17 @@ export default () => {
     
                 getUUID(services);                              
             })
-            .catch(err=>{
-                console.log('connect fail: ',err);
-                alert("Can not connect");
+            .catch(error=>{
+                console.log('connect fail: ',error);
+                //alert("Can not connect")
+                
+                observer.onError("CANTCONN");    
+                //throw error      
+                reject(error);
 
-                reject(err);                    
-            })
+            })         
     });
-
+  
   };
 
   function disconn() {
@@ -133,6 +141,7 @@ export default () => {
       bleManager.cancelDeviceConnection(peripheralId)
           .then(res=>{
               console.log('disconnect success',res.localName);
+              observer.onDeviceConnected(false)
               resolve(res);
           })
           .catch(err=>{
