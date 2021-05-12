@@ -170,7 +170,7 @@ export default () => {
                 let buffer = Buffer.from(characteristic.value,'base64'); 
                 let bleValue = buffer.toJSON().data.toString() 
                 //console.log('read success',bleValue );
-                if (bleValue[0] == "2" ){
+                if (bleValue[0] == "1" ){
                   console.log("log from read func locked")
                   observer.onLockStateChanged("locked")
                 }else{

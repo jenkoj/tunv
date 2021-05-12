@@ -1,29 +1,20 @@
 import React,{useCallback, useEffect, useMemo, useState} from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { Text, View } from '../components/Themed';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Foundation } from '@expo/vector-icons'; 
 import { useColorScheme } from 'react-native-appearance';
-
 import {storeData,getData} from "../storage/storageHandler"
-
 import {Device, State} from 'react-native-ble-plx';
-
-import {Header, ListItem, ThemeProvider, Input, Button} from 'react-native-elements';
-
 import scanner from '../components/ble/scanner';
-
-// import * as SplashScreen from "expo-splash-screen";
-
-// SplashScreen.preventAutoHideAsync().catch(console.warn);
+import Geolocation from '@react-native-community/geolocation';
 
 const DEVICE_LIST_LIMIT = 10;
-declare var global: {HermesInternal: null | {}};
 
 const deviceScreen = () => {
 
   const {start, stop, observe, conn, disconn, read, write} = useMemo(() => scanner(), []);
 
+  //observer
   const [bleState, setBleState] = useState(State.Unknown);
   const [error, setError] = useState<any>('-');
   const [started, setStarted] = useState<boolean>(false);
@@ -31,21 +22,23 @@ const deviceScreen = () => {
   const [deviceConected, setDeviceConnected] = useState(false)
   const [lockState, setLockState] = useState<any>("unknown");
 
+  //render flags, they stop from useEffect from running the first time around
   const [rendered, setRendered] = useState(false);
   const [rendered2, setRendered2] = useState(false);
   const [rendered3, setRendered3] = useState(false);
   const [rendered4, setRendered4] = useState(false);
 
+  //locks and styles
   const [locked, setToggleLock] = useState(false);
   const [buttonStyle, setButtonStyle] = useState('red')
   const [iconStyle, setIconStyle] = useState('unlink')
 
+  //ids and con
   const [selID, setSelID] = useState<string>("11E20B87-A590-6A88-3CC4-340E8781081C");
-  const [startedConn, setStartedConn] = useState(false);
-  //button
-  const [startedRead] = useState(false);
-  //ble
-  let [BleReadVal,onBleValueChange] = useState<any>("locked");
+
+  //loc
+  const [userPos, setUserPos] = useState({latitude: null, longitude: null})
+
 
   useEffect(() => {
     // register observer functions
@@ -94,86 +87,39 @@ const deviceScreen = () => {
 
   }, [observe, setStarted, setBleState, setDevices, devices,locked,setLockState,setError,setDeviceConnected]);
 
-  // const toggleStarted = useCallback(() => {
-  //   console.log('toggleStarted');
-  //   if (started) {
-  //     stop();
-  //   } else {
-  //     start();
-  //   }
-  // }, [started, start, stop]);
+  useEffect(() => {
+    // this will when lockState has changed!
+    // lets check if lock state is locked
+    if (lockState == "locked"){
+        //stroing location only when bike is being locked
+        Geolocation.getCurrentPosition((position) => {
+            //console.log(position.coords.latitude + " " + position.coords.longitude) // display VALUE
+            const location = { 
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+            };
+            setUserPos(location) // store data in usestate
+            console.log("bike locked, storing user location: ", location) // Display your values
+            storeData(location,"@location")
+        }, (err) => {
+                console.log(err);
+          });
+  }else{
+    //we do not need to store location!
+    console.log("will not store location, happy riding!")
+  }  
+  }, [lockState])
+  
 
-  // useEffect(() => setError(''), [startedConn]);
-
-  // const toggleConn = useCallback(() => { 
-  //   if (!startedConn) {
-  //     console.log('connecting');
-  //     setStartedConn(true);
-  //     conn(selID);
-  //   } else {
-  //     console.log('disconnecting');
-  //     setStartedConn(false);
-  //     //disconn();
-  //   }
-  // }, [startedConn]);
-
-
-  const toggleLock= useCallback(() => {
-    console.log('toggleStarted');
-    let state
-    if (locked) {
-      //setToggleLock(false)
-      //setButtonStyle('green')
-
-      write("1")
-      //debug only
-      //storeData("locked","@lock")
-      console.log("lock")
-      
-    } else {
-     // setToggleLock(true)
-      //setButtonStyle('red')
-      //setIconStyle("link")
-      
-      write("0")
-      
-      //debug only
-      //storeData("unlocked","@lock")
-      console.log("unlock")
-    }
-  }, [locked]);
-
-  // let ReadFromBle;
-  // let lockStatus = "locked";
-  // const setStartedRead = useCallback(() => { 
-  //  console.log("pressed")
-  //  read().then(response=>{
-  //   console.log("lock status: ", response);
-    
-
-  //   if (response == 0){
-  //     BleReadVal = "unlocked";     
-  //     console.log("unlocked: ", BleReadVal);
-
-  //   }else{
-  //     BleReadVal = "locked"
-  //     console.log("locked: ", BleReadVal);
-  //   }
-
-  //   onBleValueChange(BleReadVal);
-  //   console.log("status after val change: ", BleReadVal);
-  //  });
-   
-  // }, [startedRead]);
-
-
+//important async stuff
 useEffect(()=>{
-    //first effect 
+    //first effect that starts the chaing of commands 
     //before connecting lets check last lock state in storage
     console.log("checking state in storage!")
     getData("@lock").then((data)=>{
       console.log("state in storage: ", data)
       
+      //set states based on storage
       if (data == "locked"){
         setButtonStyle('green')
         setToggleLock(true)
@@ -183,16 +129,21 @@ useEffect(()=>{
       }
 
     }).catch(()=>{})
+    //in case connecting to last device fails we set of the effect bellow
     console.log("try to connect to last device")
     conn(selID).catch(()=>{});
      
 }, [started]);
 
+
+
 useEffect(()=>{
+  //this effect is triggered when app could not connect to ble device
   if(rendered){
    if(error == "CANTCONN"){
      console.log("ble conn problems")
      console.log("scanning again")
+     //start the means of scaning
      start()
    }
   }
@@ -202,7 +153,9 @@ useEffect(()=>{
 }, [error]);
 
 useEffect(()=>{
+  //this effect is ran when device was detected
   if(rendered2){
+   //program will detect devices with pre spefified local name
    console.log("found lock:",devices[0].id)
    console.log("connecting to this one")
    conn(devices[0].id)
@@ -213,9 +166,11 @@ useEffect(()=>{
 }, [devices]);
 
 useEffect(()=>{
+  //this effect is triggerd when device was connected
   if(rendered3){
    console.log("connected:",deviceConected)
-   
+  
+   //it changes the icon 
    if(deviceConected){
     setIconStyle("link")
    }else{
@@ -231,11 +186,12 @@ useEffect(()=>{
 }, [deviceConected]);
 
   useEffect(()=>{
+  //effect is triggered when state of lock has changed
     if(rendered3){
       console.log("new value!:",lockState)
       
+      //changes toggle state, and button style - important!
       if(lockState == "locked"){
-
         setToggleLock(true)
         setButtonStyle('green')
       }else{
@@ -249,7 +205,22 @@ useEffect(()=>{
   }
 }, [lockState]);
 
-  let colorScheme = useColorScheme();
+//it writes to the ble device
+//cant toggle until ble state has changed
+const toggleLock= useCallback(() => {
+  console.log('toggleStarted');
+  let state
+  if (locked) {
+    write("1")
+    console.log("lock")
+    
+  } else {
+    write("0")
+    console.log("unlock")
+  }
+}, [locked]);
+
+let colorScheme = useColorScheme();
 
   return (
     <View style={styles.container}>
