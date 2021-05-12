@@ -5,6 +5,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Foundation } from '@expo/vector-icons'; 
 import { useColorScheme } from 'react-native-appearance';
 
+import {storeData,getData} from "../storage/storageHandler"
+
 import {Device, State} from 'react-native-ble-plx';
 
 import {Header, ListItem, ThemeProvider, Input, Button} from 'react-native-elements';
@@ -14,7 +16,6 @@ import scanner from '../components/ble/scanner';
 // import * as SplashScreen from "expo-splash-screen";
 
 // SplashScreen.preventAutoHideAsync().catch(console.warn);
-
 
 const DEVICE_LIST_LIMIT = 10;
 declare var global: {HermesInternal: null | {}};
@@ -28,11 +29,12 @@ const deviceScreen = () => {
   const [started, setStarted] = useState<boolean>(false);
   const [devices, setDevices] = useState<Device[]>([]);
   const [deviceConected, setDeviceConnected] = useState(false)
+  const [lockState, setLockState] = useState<any>("unknown");
 
   const [rendered, setRendered] = useState(false);
   const [rendered2, setRendered2] = useState(false);
   const [rendered3, setRendered3] = useState(false);
-
+  const [rendered4, setRendered4] = useState(false);
 
   const [locked, setToggleLock] = useState(false);
   const [buttonStyle, setButtonStyle] = useState('red')
@@ -68,6 +70,20 @@ const deviceScreen = () => {
         setDeviceConnected(connectedState)
         
       },
+      onLockStateChanged:(changedLockState)=>{
+        console.log("lock state changed! new state: ", changedLockState)
+        console.log("saving state to storage")
+        storeData(changedLockState,"@lock").then(()=>{
+         //after data is stored we can trigger all screens to read new state form storage
+         console.log("saved to storage!")
+         setLockState(changedLockState)
+
+        }).catch(()=>{
+          console.log("error storing data")
+        })
+        
+      },
+
       onError: (err) => {
         console.log("much error, very bad");
         console.log('error', err);
@@ -76,81 +92,98 @@ const deviceScreen = () => {
       },
     });
 
-  }, [observe, setStarted, setBleState, setDevices, devices, setError,setDeviceConnected]);
+  }, [observe, setStarted, setBleState, setDevices, devices,locked,setLockState,setError,setDeviceConnected]);
 
-  const toggleStarted = useCallback(() => {
-    console.log('toggleStarted');
-    if (started) {
-      stop();
-    } else {
-      start();
-    }
-  }, [started, start, stop]);
+  // const toggleStarted = useCallback(() => {
+  //   console.log('toggleStarted');
+  //   if (started) {
+  //     stop();
+  //   } else {
+  //     start();
+  //   }
+  // }, [started, start, stop]);
 
-  useEffect(() => setError(''), [startedConn]);
+  // useEffect(() => setError(''), [startedConn]);
 
-  const toggleConn = useCallback(() => { 
-    if (!startedConn) {
-      console.log('connecting');
-      setStartedConn(true);
-      conn(selID);
-    } else {
-      console.log('disconnecting');
-      setStartedConn(false);
-      disconn();
-    }
-  }, [startedConn]);
+  // const toggleConn = useCallback(() => { 
+  //   if (!startedConn) {
+  //     console.log('connecting');
+  //     setStartedConn(true);
+  //     conn(selID);
+  //   } else {
+  //     console.log('disconnecting');
+  //     setStartedConn(false);
+  //     //disconn();
+  //   }
+  // }, [startedConn]);
 
 
   const toggleLock= useCallback(() => {
     console.log('toggleStarted');
     let state
     if (locked) {
-      setToggleLock(false)
-      //setIconStyle("unlink")
-      setButtonStyle('green')
-      //write("1")
+      //setToggleLock(false)
+      //setButtonStyle('green')
+
+      write("1")
+      //debug only
+      //storeData("locked","@lock")
       console.log("lock")
+      
     } else {
-      setToggleLock(true)
+     // setToggleLock(true)
+      //setButtonStyle('red')
       //setIconStyle("link")
-      //write("0")
-      setButtonStyle('red')
+      
+      write("0")
+      
+      //debug only
+      //storeData("unlocked","@lock")
       console.log("unlock")
     }
   }, [locked]);
 
-  let ReadFromBle;
-  let lockStatus = "locked";
-  const setStartedRead = useCallback(() => { 
-   console.log("pressed")
-   read().then(response=>{
-    console.log("lock status: ", response);
+  // let ReadFromBle;
+  // let lockStatus = "locked";
+  // const setStartedRead = useCallback(() => { 
+  //  console.log("pressed")
+  //  read().then(response=>{
+  //   console.log("lock status: ", response);
     
 
-    if (response == 0){
-      BleReadVal = "unlocked";     
-      console.log("locked: ", BleReadVal);
+  //   if (response == 0){
+  //     BleReadVal = "unlocked";     
+  //     console.log("unlocked: ", BleReadVal);
 
-    }else{
-      BleReadVal = "locked"
-      console.log("locked: ", BleReadVal);
-    }
+  //   }else{
+  //     BleReadVal = "locked"
+  //     console.log("locked: ", BleReadVal);
+  //   }
 
-    onBleValueChange(BleReadVal);
-    console.log("status after val change: ", BleReadVal);
-   });
+  //   onBleValueChange(BleReadVal);
+  //   console.log("status after val change: ", BleReadVal);
+  //  });
    
-  }, [startedRead]);
+  // }, [startedRead]);
 
-
-  
 
 useEffect(()=>{
+    //first effect 
+    //before connecting lets check last lock state in storage
+    console.log("checking state in storage!")
+    getData("@lock").then((data)=>{
+      console.log("state in storage: ", data)
+      
+      if (data == "locked"){
+        setButtonStyle('green')
+        setToggleLock(true)
+      }else{
+        setButtonStyle('red')
+        setToggleLock(false)
+      }
+
+    }).catch(()=>{})
     console.log("try to connect to last device")
-    console.log("mounted")
-    console.log("starting read")
-    
     conn(selID).catch(()=>{});
      
 }, [started]);
@@ -171,7 +204,7 @@ useEffect(()=>{
 useEffect(()=>{
   if(rendered2){
    console.log("found lock:",devices[0].id)
-   console.log("connectiong to this one")
+   console.log("connecting to this one")
    conn(devices[0].id)
   }
   if(!rendered2){
@@ -179,10 +212,9 @@ useEffect(()=>{
   }
 }, [devices]);
 
-
 useEffect(()=>{
   if(rendered3){
-   console.log("connected hihi:",deviceConected)
+   console.log("connected:",deviceConected)
    
    if(deviceConected){
     setIconStyle("link")
@@ -190,13 +222,32 @@ useEffect(()=>{
     setIconStyle("unlink")
    }
 
+  read();
+
   }
   if(!rendered3){
     setRendered3(true)
   }
 }, [deviceConected]);
 
+  useEffect(()=>{
+    if(rendered3){
+      console.log("new value!:",lockState)
+      
+      if(lockState == "locked"){
 
+        setToggleLock(true)
+        setButtonStyle('green')
+      }else{
+        setToggleLock(false)
+        setButtonStyle('red')
+      }
+  }
+
+  if(!rendered4){
+    setRendered4(true)
+  }
+}, [lockState]);
 
   let colorScheme = useColorScheme();
 

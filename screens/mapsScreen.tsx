@@ -27,7 +27,7 @@ export default class App extends React.Component {
   
   componentDidMount(){
       console.log("fetching...")
-      getData().then((data: any)=> {
+      getData("@location").then((data: any)=> {
       
        this.state.latitudeMarker = data.latitude;
        this.state.longitudeMarker = data.longitude;
@@ -68,12 +68,12 @@ export default class App extends React.Component {
     console.log("data to be stored: ")
     console.log(location);
     console.log("stroing!........");
-    storeData(location);  
+    storeData(location,"@location");  
     console.log("........stored!");
     
     console.log("data stored: ")
     
-    getData().then((result: any)=> {
+    getData("@location").then((result: any)=> {
       console.log("longitude: ",result.longitude)
       console.log("latitude: ", result.latitude)
   

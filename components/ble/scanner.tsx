@@ -6,6 +6,7 @@ export interface Observer {
   onStateChanged: (state: State) => void;
   onDeviceDetected: (device: Device) => void;
   onDeviceConnected: (connected: boolean) => void;
+  onLockStateChanged: (state: String) => void;
   onError: (error: any) => void;
 }
 
@@ -23,6 +24,7 @@ export default () => {
     onStateChanged: () => {},
     onDeviceDetected: () => {},
     onDeviceConnected: () => {},
+    onLockStateChanged: () => {},
     onError: () => {},
 
   };
@@ -105,7 +107,7 @@ export default () => {
       bleManager.connectToDevice(id)
             .then(device=>{                           
                 console.log('connect success:',device.name,device.id);
-                observer.onDeviceConnected(true)
+                
                 //alert("connected");
                 peripheralId = device.id;
                 deviceVals.vals = device;       
@@ -121,7 +123,8 @@ export default () => {
 
                 console.log('get uuid',services);
     
-                getUUID(services);                              
+                getUUID(services); 
+                observer.onDeviceConnected(true)                             
             })
             .catch(error=>{
                 console.log('connect fail: ',error);
@@ -154,46 +157,65 @@ export default () => {
 
   function read(){
   
+  try{
     console.log("Pref ID: ", deviceVals.vals.id );
     console.log("Device charasteistic ", deviceVals.services.readCharacteristicUUID[0].toString() );
     console.log("Device serviceIDS: ", deviceVals.services.readServiceUUID[0].toString() )  
-
+  }catch{
+    console.log("id read failed")
+  }
     return new Promise( (resolve, reject) =>{
         bleManager.readCharacteristicForDevice(deviceVals.vals.id, deviceVals.services.readServiceUUID[0].toString(), deviceVals.services.readCharacteristicUUID[0].toString())
             .then(characteristic=>{                    
                 let buffer = Buffer.from(characteristic.value,'base64'); 
-                let bleValue = buffer.toJSON().data.toString()      
+                let bleValue = buffer.toJSON().data.toString() 
                 //console.log('read success',bleValue );
+                if (bleValue[0] == "2" ){
+                  console.log("log from read func locked")
+                  observer.onLockStateChanged("locked")
+                }else{
+                  console.log("log from read func unlocked")
+                  observer.onLockStateChanged("unlocked")
+                }
                 resolve(bleValue);  
             },error=>{
                 console.log('read fail: ',error);
-                alert('read fail: ' + error.reason);
+                //alert('read fail: ' + error.reason);
                 reject(error);
+            }).catch(()=>{
+              console.log("read fail")
             })
     });
 }
 
 function write(value:string){
-        
+  
   let Buffer = require("buffer").Buffer;
   let formatValue = new Buffer(value).toString("base64");
-   
+  
+  //for mi only! remove arrays for write chrachetirstics
   return new Promise( (resolve, reject) =>{      
-      bleManager.writeCharacteristicWithResponseForDevice(deviceVals.vals.id,deviceVals.services.writeWithResponseServiceUUID.toString(), 
-      deviceVals.services.writeWithResponseCharacteristicUUID.toString(),formatValue)
+      bleManager.writeCharacteristicWithResponseForDevice(deviceVals.vals.id,deviceVals.services.writeWithResponseServiceUUID[0].toString(), 
+      deviceVals.services.writeWithResponseCharacteristicUUID[0].toString(),formatValue)
           .then(characteristic=>{                    
               console.log('write success',formatValue);
+
+              if(value == "0"){
+                observer.onLockStateChanged("locked")
+              }else{
+                observer.onLockStateChanged("unlocked")
+              }
+
               resolve(characteristic);
           },error=>{
               console.log('write fail: ',error);
               alert('write fail: ',error.reason);
               reject(error);
+          }).catch(()=>{
+            console.log("write failed!")
           })
   });
 }
-
-
-
   return {
     start,
     stop,
