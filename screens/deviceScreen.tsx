@@ -16,12 +16,12 @@ const deviceScreen = () => {
     let state
     if (locked) {
       setToggleLock(false)
-      //setIconStyle("unlink")
+      setIconStyle("unlink")
       setButtonStyle('green')
       console.log("lock")
     } else {
       setToggleLock(true)
-      //setIconStyle("link")
+      setIconStyle("link")
       setButtonStyle('red')
       console.log("unlock")
     }

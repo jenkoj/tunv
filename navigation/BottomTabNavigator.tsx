@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
@@ -9,6 +9,7 @@ import Colors from '../constants/Colors';
 import { useColorScheme } from 'react-native-appearance';
 import MapsScreen from '../screens/mapsScreen'
 import LoginScreen from '../screens/loginScreen';
+import testScreen from '../screens/testScreen';
 
 
 import TabOneScreen from '../screens/TabOneScreen';
@@ -30,7 +31,7 @@ export default function BottomTabNavigator() {
         name="devices"
         component={TabOneNavigator}
         options={{
-          tabBarIcon: ({ color }) =>  <FontAwesome name="lock" size={24} color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome name="lock" size={24} color={color} />,
         }}
       />
       <BottomTab.Screen
@@ -65,8 +66,8 @@ function TabOneNavigator() {
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
-        name="deviceScreen"
-        component={deviceScreen}
+        name="testScreen"
+        component={testScreen}
         options={{ headerTitle: 'Devices' }}
       />
     </TabOneStack.Navigator>
@@ -94,7 +95,7 @@ function TabThreeNavigator() {
     <TabThreeStack.Navigator>
       <TabThreeStack.Screen
         name="TabThreeScreen"
-        component={BleScreen}
+        component={LoginScreen}
         options={{ headerTitle: 'Settings' }}
       />
     </TabThreeStack.Navigator>
