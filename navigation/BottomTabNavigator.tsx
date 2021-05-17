@@ -66,8 +66,8 @@ function TabOneNavigator() {
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
-        name="testScreen"
-        component={testScreen}
+        name="deviceScreen"
+        component={deviceScreen}
         options={{ headerTitle: 'Devices' }}
       />
     </TabOneStack.Navigator>
