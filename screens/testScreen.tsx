@@ -42,7 +42,7 @@ const deviceScreen = () => {
                     //resizeMode='contain'
                     style={styles.imgConn}
                     source={{
-                        uri: 'https://community.connection.com/wp-content/uploads/2017/07/Go-Global-with-Connection.jpg'
+                        uri: 'https://i.pinimg.com/736x/e5/4a/07/e54a071e4abe3340ddfb2222712fac51.jpg'
                     }}
                 />
                 <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 20 }}>My devices</Text>
