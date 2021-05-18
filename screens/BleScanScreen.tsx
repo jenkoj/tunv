@@ -62,7 +62,7 @@ const BleScanner = () => {
   }, [started, start, stop]);
 
 
-  const [selID, setSelID] = useState<string>("17F59367-027E-401D-28C6-44CC608B7B1C");
+  const [selID, setSelID] = useState<string>("BD90FD3C-64B7-EECA-F711-547444C4D1FA");
   const [startedConn, setStartedConn] = useState(false);
   const [locked, setToggleLock] = useState(false);
   //button

@@ -61,8 +61,8 @@ export default () => {
 
               if (device) {
                 
-                if (device.localName == "MI1S" && device.id != lastDetectedDevice){
-                //if (device.localName == "tap-lock" && device.id != lastDetectedDevice){
+                //if (device.localName == "MI1S" && device.id != lastDetectedDevice){
+                if (device.localName == "tap-lock" && device.id != lastDetectedDevice){
                 //if (device.id != lastDetectedDevice){
                   //detect only arduino
                   observer.onDeviceDetected(device);
@@ -155,8 +155,15 @@ export default () => {
   }
 
 
-  function read(){
+  function read(lastValue:string){
   
+
+  if(lastValue == "locked"){
+    lastValue = "1"
+  }else{
+    lastValue = "0"
+  }
+
   try{
     console.log("Pref ID: ", deviceVals.vals.id );
     console.log("Device charasteistic ", deviceVals.services.readCharacteristicUUID[0].toString() );
@@ -170,12 +177,19 @@ export default () => {
                 let buffer = Buffer.from(characteristic.value,'base64'); 
                 let bleValue = buffer.toJSON().data.toString() 
                 //console.log('read success',bleValue );
-                if (bleValue[0] == "1" ){
-                  console.log("log from read func locked")
-                  observer.onLockStateChanged("locked")
+                //when reading periodic, check if value has changed!
+                console.log("comparing lastValue",lastValue,"and",bleValue[0])
+
+                if(lastValue != bleValue[0]){
+                  if (bleValue[0] == "1" ){
+                    console.log("log from read func locked")
+                    observer.onLockStateChanged("locked")
+                  }else{
+                    console.log("log from read func unlocked")
+                    observer.onLockStateChanged("unlocked")
+                  }
                 }else{
-                  console.log("log from read func unlocked")
-                  observer.onLockStateChanged("unlocked")
+                  console.log("read value is the same as stored one, skipping!")
                 }
                 resolve(bleValue);  
             },error=>{
@@ -202,14 +216,15 @@ function write(value:string){
 
               if(value == "0"){
                 observer.onLockStateChanged("locked")
-              }else{
+              }
+              if(value == "1"){
                 observer.onLockStateChanged("unlocked")
               }
 
               resolve(characteristic);
           },error=>{
               console.log('write fail: ',error);
-              alert('write fail: ',error.reason);
+              //alert('write fail: ',error.reason);
               reject(error);
           }).catch(()=>{
             console.log("write failed!")

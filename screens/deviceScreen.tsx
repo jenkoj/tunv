@@ -1,10 +1,10 @@
-import React,{useCallback, useEffect, useMemo, useState} from 'react';
+import React,{useCallback, useEffect, useMemo, useState, useRef} from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { Text, View } from '../components/Themed';
 import { Foundation } from '@expo/vector-icons'; 
 import { useColorScheme } from 'react-native-appearance';
 import {storeData,getData} from "../storage/storageHandler"
-import {Device, State} from 'react-native-ble-plx';
+import {BleManager, Device, State} from 'react-native-ble-plx';
 import scanner from '../components/ble/scanner';
 import Geolocation from '@react-native-community/geolocation';
 
@@ -33,12 +33,13 @@ const deviceScreen = () => {
   const [buttonStyle, setButtonStyle] = useState('red')
   const [iconStyle, setIconStyle] = useState('unlink')
 
+  //timer
+  const [timerState,setTrigerTimer] = useState<boolean>(false);
   //ids and con
-  const [selID, setSelID] = useState<string>("11E20B87-A590-6A88-3CC4-340E8781081C");
+  const [selID, setSelID] = useState<string>("0000180f-0000-1000-8000-00805f9b34fb");
 
   //loc
   const [userPos, setUserPos] = useState({latitude: null, longitude: null})
-
 
   useEffect(() => {
     // register observer functions
@@ -175,9 +176,11 @@ useEffect(()=>{
     setIconStyle("link")
    }else{
     setIconStyle("unlink")
+    console.log("trying to reconect!!")
+    conn(devices[0].id);
    }
 
-  read();
+  read("force read");
 
   }
   if(!rendered3){
@@ -187,7 +190,7 @@ useEffect(()=>{
 
   useEffect(()=>{
   //effect is triggered when state of lock has changed
-    if(rendered3){
+  if(rendered4){
       console.log("new value!:",lockState)
       
       //changes toggle state, and button style - important!
@@ -205,6 +208,39 @@ useEffect(()=>{
   }
 }, [lockState]);
 
+useEffect(()=>{
+
+  //setLockState(lockState)
+  console.log("i am awake, keeping the heartbeat, reading from arduino... state is ",locked)
+  read(lockState).catch(e =>{
+    console.log("cant read not conn!")
+    setDeviceConnected(false)
+  });
+  write("MQQQ").catch(e =>{
+    console.log("cant write not connected!")
+  })
+
+}, [timerState]);
+
+
+useEffect(()=>{
+
+const interval = setInterval(()=>{
+  //trigerTimer(timerState+1)
+  if(timerState == true){
+    console.log("if stavek true",timerState)
+    setTrigerTimer(false)
+  }else{
+    console.log("if stavek false",timerState)
+    setTrigerTimer(true)
+  }
+  console.log("timer state         :", timerState)
+}, 1000);
+return () => clearInterval(interval);
+   
+});
+
+
 //it writes to the ble device
 //cant toggle until ble state has changed
 const toggleLock= useCallback(() => {
@@ -213,8 +249,8 @@ const toggleLock= useCallback(() => {
   if (locked) {
     write("1")
     console.log("lock")
-    
-  } else {
+  
+  } else {  
     write("0")
     console.log("unlock")
   }
