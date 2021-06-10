@@ -6,10 +6,12 @@ import { Text, View } from '../components/Themed';
 
 import * as firebase from 'firebase';
 
+import {storeData,getData} from "../storage/storageHandler"
+
 import {Container, Content, Header, Form, Input, Button, Label, Item} from 'native-base';
 
-var firebaseConfig = {
-  apiKey: "AIzaSyBsLLrz2GAvKwgj-jiSJ4O-aaWGC-WSyKQ",
+export var firebaseConfig = {
+  apiKey: "",
   authDomain: "tunvproject.firebaseapp.com",
   projectId: "tunvproject",
   storageBucket: "tunvproject.appspot.com",
@@ -17,6 +19,7 @@ var firebaseConfig = {
   appId: "1:1845743549:web:5202260f1e9d4ffc7a8cd4",
   measurementId: "G-3ECEV5H61K"
 };
+
 // Initialize Firebase
 if(!firebase.apps.length){
   firebase.initializeApp(firebaseConfig);
@@ -61,6 +64,7 @@ export default class App extends React.Component{
       firebase.auth().signInWithEmailAndPassword(email, password)
       .then(()=>{
         console.log('Login successful.');
+        storeData(email,"@email").then(()=>{console.log("data stored to local storage!")});
        })
     .catch((error)=> {
         console.log(error.code);
@@ -68,6 +72,8 @@ export default class App extends React.Component{
         alert("E-mail or password is invalid.")
       });
    
+
+    
 
   render(){
     return(
