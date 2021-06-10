@@ -9,7 +9,7 @@ import * as firebase from 'firebase';
 import {Container, Content, Header, Form, Input, Button, Label, Item} from 'native-base';
 
 var firebaseConfig = {
-  apiKey: "AIzaSyBsLLrz2GAvKwgj-jiSJ4O-aaWGC-WSyKQ",
+  apiKey: "",
   authDomain: "tunvproject.firebaseapp.com",
   projectId: "tunvproject",
   storageBucket: "tunvproject.appspot.com",
