@@ -10,7 +10,7 @@ import { Container, Content, Header, Form, Input, Button, Label, Item } from 'na
 import { Foundation, AntDesign, Feather, MaterialIcons } from '@expo/vector-icons';
 
 var firebaseConfig = {
-  apiKey: "AIzaSyBsLLrz2GAvKwgj-jiSJ4O-aaWGC-WSyKQ",
+  apiKey: "",
   authDomain: "tunvproject.firebaseapp.com",
   projectId: "tunvproject",
   storageBucket: "tunvproject.appspot.com",

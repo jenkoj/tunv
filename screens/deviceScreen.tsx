@@ -62,8 +62,9 @@ const deviceScreen = () => {
                 <View style={{ backgroundColor: "#FFFFFF", marginTop: 300, marginBottom: 300, marginLeft: 20, marginRight: 20, padding: 40, borderRadius: 10, flex: 1 }}>
                   <View style={{ flexDirection: "column", backgroundColor: "#FFFFFF", justifyContent: 'center', alignItems: 'center' }}>
                     <View style={{ backgroundColor: "#FFFFFF", flexDirection: "row", marginBottom: 20 }}>
-                      <Foundation name={"info"} size={24} color="black" />
+                    <Text style={{ fontSize: 30, color: "#000000", marginLeft: 10 }}>lock status</Text>
                     </View>
+                    
                     <View style={{ backgroundColor: "#FFFFFF", flexDirection: "row" }}>
 
                       <View style={{ backgroundColor: "#FFFFFF" }}>
@@ -97,7 +98,7 @@ const deviceScreen = () => {
 
             <View style={[styles.text, { backgroundColor: buttonStyle }]}>
               <Text>
-                My bike
+                Bike is unlocked
                             </Text>
             </View>
             <View style={[styles.icon, { backgroundColor: buttonStyle }]}>
@@ -112,7 +113,7 @@ const deviceScreen = () => {
           >
             <View style={[styles.text, { backgroundColor: 'red' }]}>
               <Text>
-                Bike1
+                MTB is unlocked
                             </Text>
             </View>
             <View style={[styles.icon, { backgroundColor: 'red' }]}>
@@ -127,7 +128,7 @@ const deviceScreen = () => {
           >
             <View style={[styles.text, { backgroundColor: 'red' }]}>
               <Text>
-                Bike2
+                Road bike is unlocked
                             </Text>
             </View>
             <View style={[styles.icon, { backgroundColor: 'red' }]}>
@@ -135,36 +136,7 @@ const deviceScreen = () => {
             </View>
           </Pressable>
         </View>
-        <View style={[styles.button, { backgroundColor: 'red' }]}>
-          <Pressable
-            style={styles.button}
-          //onPress={toggleLock}
-          >
-            <View style={[styles.text, { backgroundColor: 'red' }]}>
-              <Text>
-                Bike3
-                            </Text>
-            </View>
-            <View style={[styles.icon, { backgroundColor: 'red' }]}>
-              <Foundation name={'link'} size={24} color="white" />
-            </View>
-          </Pressable>
-        </View>
-        <View style={[styles.button, { backgroundColor: 'red' }]}>
-          <Pressable
-            style={styles.button}
-          //onPress={toggleLock}
-          >
-            <View style={[styles.text, { backgroundColor: 'red' }]}>
-              <Text>
-                Bike4
-                            </Text>
-            </View>
-            <View style={[styles.icon, { backgroundColor: 'red' }]}>
-              <Foundation name={'link'} size={24} color="white" />
-            </View>
-          </Pressable>
-        </View>
+        
       </ScrollView>
     </SafeAreaView>
   )
