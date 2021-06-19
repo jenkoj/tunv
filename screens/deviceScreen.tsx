@@ -9,6 +9,11 @@ import {storeData,getData} from "../storage/storageHandler"
 import {BleManager, Device, State} from 'react-native-ble-plx';
 import scanner from '../components/ble/scanner';
 import Geolocation from '@react-native-community/geolocation';
+import { AntDesign } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons'; 
+
+
+import { Container} from 'native-base';
 
 const DEVICE_LIST_LIMIT = 10;
 
@@ -43,6 +48,8 @@ const deviceScreen = () => {
   const [popUp, setpopUpState] = useState(false);
   //loc
   const [userPos, setUserPos] = useState({latitude: null, longitude: null})
+
+  const [name, setName] = useState<any>("user");
 
   useEffect(() => {
     // register observer functions
@@ -113,12 +120,14 @@ const deviceScreen = () => {
     console.log("will not store location, happy riding!")
   }  
   }, [lockState])
-  
+
+
 
 //important async stuff
 useEffect(()=>{
     //first effect that starts the chaing of commands 
     //before connecting lets check last lock state in storage
+    
     console.log("checking state in storage!")
     getData("@lock").then((data)=>{
       console.log("state in storage: ", data)
@@ -240,7 +249,7 @@ const interval = setInterval(()=>{
     setTrigerTimer(true)
   }
   console.log("timer state         :", timerState)
-}, 1000);
+}, 100000); //debug! 
 return () => clearInterval(interval);
    
 });
@@ -261,44 +270,35 @@ const toggleLock= useCallback(() => {
   }
 }, [locked]);
 
+useEffect(() => {
+  getData("@email").then((data)=>{
+    //console.log("parsing letter: ", data);
+    let parsed_mail = data.split(".");
+    setName(parsed_mail[0])
+    console.log("name", parsed_mail[0])
+  })
+});
+
+
+
 let colorScheme = useColorScheme();
-/*
-  return (
-    <View style={styles.container}>
-      
-    <View style={[styles.button,{ backgroundColor: buttonStyle }]}>
-      <Pressable
-        style={styles.button}
-        onPress={toggleLock}
-      >
-        <View style={[styles.text,{ backgroundColor: buttonStyle }]}>
-          <Text>
-            Bike
-          </Text>
-        </View>
-        <View style={[styles.icon,{ backgroundColor: buttonStyle }]}>
-           <Foundation name={iconStyle} size={24} color="white" />
-        </View>
-      </Pressable>
-    </View>
-  </View>
-  )
-}
-*/
+
 return (
+
   <SafeAreaView style={styles.container}>
-    <View style={styles.myDevices}>
-      <Image
-        //resizeMode='contain'
-        style={styles.imgConn}
-        source={{
-          uri: 'https://i.pinimg.com/736x/e5/4a/07/e54a071e4abe3340ddfb2222712fac51.jpg'
-        }}
-      />
-      <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 20 }}>My devices</Text>
+    <View style={styles.welcomeMsg}>
+            <Text style={{ fontSize: 40, fontWeight: "bold", marginTop: 20 }}>Hello {name}!</Text>
+          </View>
+          <View style={styles.welcomeMsg}>
+            <Text style={{ fontSize: 18, marginTop: 1,fontWeight: "bold" }}>Your locks are ready to use.</Text>
+    </View>
+  
+   <View style={styles.container2} >
+   
+    <View style={styles.myDevices}>      
     </View>
     <ScrollView style={styles.scrollView} fadingEdgeLength={0}>
-      <View style={[styles.button, { backgroundColor: buttonStyle }]}>
+      <View style={[styles.button, { backgroundColor: buttonStyle }]}> 
         <Pressable
           style={styles.button}
           onPress={toggleLock}
@@ -307,19 +307,33 @@ return (
           <Modal
             transparent={true}
             visible={popUp}
-          >
-            <View style={{ backgroundColor: "#000000aa", flex: 1 }}>
-              <View style={{ backgroundColor: "#FFFFFF", marginTop: 300, marginBottom: 300, marginLeft: 20, marginRight: 20, padding: 40, borderRadius: 10, flex: 1 }}>
-                <View style={{ flexDirection: "column", backgroundColor: "#FFFFFF", justifyContent: 'center', alignItems: 'center' }}>
-                  <View style={{ backgroundColor: "#FFFFFF", flexDirection: "row", marginBottom: 20 }}>
-                  <Text style={{ fontSize: 30, color: "#000000", marginLeft: 10 }}>lock status</Text>
-                  </View>
-                  
-                  <View style={{ backgroundColor: "#FFFFFF", flexDirection: "row" }}>
+          >  
+           <Container style={styles.containerpopUp}>
+                  <View style={{ flex: 0.3, backgroundColor: "white", marginTop:10 }}>
+                    <Pressable
+                      onPress={() => { setpopUpState(false) }}
+                    >
 
+                     <AntDesign name="closecircleo" size={24} color="black" />
+
+                    </Pressable>
+                  </View>
+                  <View style={{ flex: 0.7, backgroundColor: "white", alignContent: "center", alignItems: "center", marginTop: 0 }}>
+                      <Text style={{ fontSize: 30, color: "#000000", marginLeft: 10 }}>lock status</Text>
+                  </View>
+                  <View style={{ backgroundColor: "white", alignContent: "center", alignItems: "center", marginBottom:50, marginTop: 0}}> 
+                  <View style={{ backgroundColor: "#FFFFFF", flexDirection: "row" }}>
+                    <View style={{ backgroundColor: "#FFFFFF" }}>
+                      <FontAwesome name="lock" size={24} color="black" />
+                  </View>
+                    <View style={{ backgroundColor: "#FFFFFF" }}>
+                      <Text style={{ fontSize: 20, color: "#000000", marginLeft: 10 }}> {lockState} </Text>
+                    </View>
+                  </View>
+                  <View style={{ backgroundColor: "#FFFFFF", flexDirection: "row" }}>
                     <View style={{ backgroundColor: "#FFFFFF" }}>
                       <Foundation name={"battery-half"} size={24} color="black" />
-                    </View>
+                  </View>
                     <View style={{ backgroundColor: "#FFFFFF" }}>
                       <Text style={{ fontSize: 20, color: "#000000", marginLeft: 10 }}>  56%</Text>
                     </View>
@@ -332,17 +346,9 @@ return (
                       <Text style={{ fontSize: 20, color: "#000000", marginLeft: 10 }}>350 m</Text>
                     </View>
                   </View>
-                  <View style={{ marginTop: 40, backgroundColor: "#FFFFFF", height: 40, width: 70, justifyContent: 'center', alignItems: 'center' }}>
-                    <Pressable
-                      onPress={() => { setpopUpState(false) }}
-                    >
-                      <Foundation name={"x"} size={30} color="red" />
-                    </Pressable>
-
                   </View>
-                </View>
-              </View>
-            </View>
+                </Container>
+          
           </Modal>
 
 
@@ -364,7 +370,7 @@ return (
           <View style={[styles.text, { backgroundColor: 'red' }]}>
             <Text>
               MTB is unlocked
-                          </Text>
+            </Text>
           </View>
           <View style={[styles.icon, { backgroundColor: 'red' }]}>
             <Foundation name={'link'} size={24} color="white" />
@@ -379,7 +385,7 @@ return (
           <View style={[styles.text, { backgroundColor: 'red' }]}>
             <Text>
               Road bike is unlocked
-                          </Text>
+            </Text>
           </View>
           <View style={[styles.icon, { backgroundColor: 'red' }]}>
             <Foundation name={'link'} size={24} color="white" />
@@ -388,6 +394,7 @@ return (
       </View>
       
     </ScrollView>
+  </View>
   </SafeAreaView>
 )
 }
@@ -396,12 +403,34 @@ const styles = StyleSheet.create({
 container: {
   flex: 1,
   paddingHorizontal: 10,
+  paddingBottom:5,
+
+},
+container2: {
+  flex: 1,
+  paddingHorizontal: 10,
+  paddingBottom:5,
   alignItems: 'center',
   justifyContent: 'center',
 },
 icon: {
 
 },
+
+containerpopUp: {
+  //flex: 1,
+  paddingHorizontal: 10,
+  //alignItems: 'center',
+  //justifyContent: 'center',
+  margin: 60,
+  marginTop: 300,
+  marginBottom: 300,
+  //height: 50,
+  borderRadius: 10,
+  backgroundColor: "white",
+  flexDirection: "column"
+},
+
 button: {
   borderRadius: 10,
   alignItems: 'center',
@@ -412,6 +441,10 @@ button: {
   width: 300,
   margin: 10,
 },
+
+welcomeMsg: {
+  marginLeft: 30,
+ },
 text: {
   flex: 0.8,
   fontSize: 20,

@@ -61,8 +61,8 @@ export default () => {
 
               if (device) {
                 
-                //if (device.localName == "MI1S" && device.id != lastDetectedDevice){
-                if (device.localName == "tap-lock" && device.id != lastDetectedDevice){
+                if (device.localName == "MI1S" && device.id != lastDetectedDevice){
+                //if (device.localName == "tap-lock" && device.id != lastDetectedDevice){
                 //if (device.id != lastDetectedDevice){
                   //detect only arduino
                   observer.onDeviceDetected(device);

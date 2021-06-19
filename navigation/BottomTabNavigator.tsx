@@ -5,23 +5,34 @@ import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
 import Colors from '../constants/Colors';
-//import useColorScheme from '../hooks/useColorScheme';
 import { useColorScheme } from 'react-native-appearance';
 import MapsScreen from '../screens/mapsScreen'
-import LoginScreen from '../screens/loginScreen';
 
 import BleScreen from '../screens/BleScanScreen'
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
 import deviceScreen from '../screens/deviceScreen';
+import settingsScreen from '../screens/settingsScreen';
+
 import { BottomTabParamList, TabOneParamList, TabTwoParamList, TabThreeParamList } from '../types';
-import ListItem from '../components/ListItem';
+import { Text, View} from '../components/Themed';
+import { StyleSheet } from 'react-native'
+import {getData} from "../storage/storageHandler"
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
+let letter: {} | null | undefined;
 
 export default function BottomTabNavigator() {
   const colorScheme = useColorScheme();
 
+  
+//get data from storage and parse it
+  getData("@email").then((data)=>{
+    let parsed_mail = data.split(".");
+    let name = parsed_mail[0];
+    letter = name[0].toUpperCase();
+  })
+
+  
+//define all three screens add icons to navigation and header bar
   return (
     <BottomTab.Navigator
       initialRouteName="login"
@@ -51,23 +62,31 @@ export default function BottomTabNavigator() {
   );
 }
 
-// You can explore the built-in icon families and icons on the web at:
-// https://icons.expo.fyi/
-function TabBarIcon(props: { name: React.ComponentProps<typeof Ionicons>['name']; color: string }) {
-  return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
-}
-
-// Each tab has its own navigation stack, you can read more about this pattern here:
-// https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
 const TabOneStack = createStackNavigator<TabOneParamList>();
 
 function TabOneNavigator() {
-  return (
+
+  
+return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
         name="deviceScreen"
         component={deviceScreen}
-        options={{ headerTitle: 'Devices' }}
+        options={{ 
+          headerTitle: '',
+          headerLeft: () => (
+            <Text style={{fontSize: 30, fontWeight: 'bold', marginLeft: 28}}>TAPLOCK</Text>
+          ),
+          headerRight: () => (
+          <View style={styles.outerCircle}>
+            <View style={styles.innerCircle}>
+              
+                <Text style={{fontSize: 25}}>{letter}</Text>
+              
+            </View>
+          </View>
+          ),
+        }}
       />
     </TabOneStack.Navigator>
   );
@@ -81,7 +100,21 @@ function TabTwoNavigator() {
       <TabTwoStack.Screen
         name="TabTwoScreen"
         component={MapsScreen}
-        options={{ headerTitle: 'Device location' }}
+        options={{ 
+          headerTitle: '',
+          headerLeft: () => (
+            <Text style={{fontSize: 30, fontWeight: 'bold', marginLeft: 28}}>TAPLOCK</Text>
+          ),
+          headerRight: () => (
+          <View style={styles.outerCircle}>
+            <View style={styles.innerCircle}>
+              
+                <Text style={{fontSize: 25}}>{letter}</Text>
+              
+            </View>
+          </View>
+          ),
+        }}
       />
     </TabTwoStack.Navigator>
   );
@@ -94,9 +127,46 @@ function TabThreeNavigator() {
     <TabThreeStack.Navigator>
       <TabThreeStack.Screen
         name="TabThreeScreen"
-        component={BleScreen}
-        options={{ headerTitle: 'Settings' }}
+        component={settingsScreen}
+        options={{ 
+          headerTitle: '',
+          headerLeft: () => (
+            <Text style={{fontSize: 30, fontWeight: 'bold', marginLeft: 28}}>TAPLOCK</Text>
+          ),
+          headerRight: () => (
+          <View style={styles.outerCircle}>
+            <View style={styles.innerCircle}>
+              
+                <Text style={{fontSize: 25}}>{letter}</Text>
+              
+            </View>
+          </View>
+          ),
+        }}
       />
     </TabThreeStack.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  
+  outerCircle: {
+    marginRight: 15,
+    marginBottom: 10,
+    width: 42,
+    height: 42,
+    borderRadius: 42/2,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  innerCircle: {
+    
+    width: 40,
+    height: 40,
+    borderRadius: 40/2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  
+    }
+});  
