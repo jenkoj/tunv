@@ -110,7 +110,7 @@ render(){
     <Marker 
       coordinate={{ latitude : this.state.latitudeMarker , longitude : this.state.longitudeMarker }} 
       pinColor={'blue'}
-      title={'LOKACIJA VAŠEGA KOLESA.'}
+      title={'BIKE LOCATION.'}
     />  
 
 
@@ -118,7 +118,7 @@ render(){
           this.state.marker &&
           <Marker 
             coordinate={this.state.marker}
-            title={'PODATKI O LOKACIJI SO SHRANJENI!'}  
+            title={'SAVED!'}  
           />
     }
 
