@@ -25,7 +25,7 @@ export default class App extends React.Component {
 
   componentDidMount() {
     console.log("fetching...")
-    getData().then((data: any) => {
+    getData("@location").then((data: any) => {
 
       this.state.latitudeMarker = data.latitude;
       this.state.longitudeMarker = data.longitude;
@@ -62,24 +62,24 @@ export default class App extends React.Component {
 
 
   setMarker = (location: any) => {
-    //dispatch(setMarkerLocationAction(location));
-    console.log("data to be stored: ")
-    console.log(location);
-    console.log("stroing!........");
-    storeData(location);
-    console.log("........stored!");
-
-    console.log("data stored: ")
-
-    getData().then((result: any) => {
-      console.log("longitude: ", result.longitude)
-      console.log("latitude: ", result.latitude)
-
-    }).catch((err: any) => {
-      console.log(err)
-
-    });
-  }
+   //dispatch(setMarkerLocationAction(location));
+   console.log("data to be stored: ")
+   console.log(location);
+   console.log("stroing!........");
+   storeData(location,"@location");  
+   console.log("........stored!");
+   
+   console.log("data stored: ")
+   
+   getData("@location").then((result: any)=> {
+     console.log("longitude: ",result.longitude)
+     console.log("latitude: ", result.latitude)
+ 
+   }).catch((err: any) => {
+       console.log(err)
+ 
+   });
+ }
 
 
   render() {
@@ -94,8 +94,8 @@ export default class App extends React.Component {
         key={this.state.forceRefresh}
         style={styles.map}
         region={{
-          latitude: 45.962060/*this.state.latitude*/,
-          longitude: 14.661510/*this.state.longitude*/,
+          latitude: this.state.latitude,
+          longitude: this.state.longitude,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }}
@@ -108,7 +108,7 @@ export default class App extends React.Component {
 
 
         <Marker
-          coordinate={{ latitude: 45.962060/*this.state.latitudeMarker*/, longitude: 14.661510/*this.state.longitudeMarker*/ }}
+          coordinate={{ latitude: this.state.latitudeMarker, longitude: this.state.longitudeMarker }}
           pinColor={'blue'}
           title={'BIKE LOCATION.'}
         />

@@ -11,7 +11,7 @@ import { storeData, getData } from "../storage/storageHandler"
 
 
 var firebaseConfig = {
-  apiKey: "AIzaSyBsLLrz2GAvKwgj-jiSJ4O-aaWGC-WSyKQ",
+  apiKey: "",
   authDomain: "tunvproject.firebaseapp.com",
   projectId: "tunvproject",
   storageBucket: "tunvproject.appspot.com",
@@ -111,6 +111,8 @@ export default class App extends React.Component {
       this.setState({ username: parsed_mail[0] })
       //this.username = parsed_mail[0];
       console.log("name from settings", this.state.username)
+    }).catch((err)=>{
+      console.log(err);
     })
 
   }
@@ -122,9 +124,11 @@ export default class App extends React.Component {
         console.log("parsing letter: ", data);
         let parsed_mail = data.split(".");
         this.setState({ username: parsed_mail[0] })
-        //this.username = parsed_mail[0];
         console.log("name from settings", this.state.username)
+      }).catch((err)=>{
+        console.log(err);
       })
+      
       this.state.updateUsername = 1;
       console.log("updating name")
     }

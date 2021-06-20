@@ -46,6 +46,9 @@ const deviceScreen = () => {
       let parsed_mail = data.split(".");
       setName(parsed_mail[0])
       console.log("name", parsed_mail[0])
+    }).catch((err)=>{
+      //console.log(err);
+      
     })
   });
 

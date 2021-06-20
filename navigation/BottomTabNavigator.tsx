@@ -29,6 +29,9 @@ export default function BottomTabNavigator() {
     let parsed_mail = data.split(".");
     let name = parsed_mail[0];
     letter = name[0].toUpperCase();
+  }).catch((err)=>{
+    //console.log(err);
+    letter = "U";
   })
 
   
