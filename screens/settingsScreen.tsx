@@ -6,8 +6,8 @@ import * as firebase from 'firebase';
 
 import { Container, Content, Header, Form, Input, Button, Label, Item } from 'native-base';
 import { Foundation, AntDesign, Feather, MaterialIcons } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons'; 
-import {storeData,getData} from "../storage/storageHandler"
+import { Ionicons } from '@expo/vector-icons';
+import { storeData, getData } from "../storage/storageHandler"
 
 
 var firebaseConfig = {
@@ -25,7 +25,7 @@ if (!firebase.apps.length) {
 }
 
 export default class App extends React.Component {
-    
+
   constructor() {
     super();
     this.state = {
@@ -66,16 +66,16 @@ export default class App extends React.Component {
     }
   }
 
-login = (email, password) =>
+  login = (email, password) =>
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then(() => {
         console.log('Login successful.');
         alert('Login successful.');
-        storeData(email,"@email").then(()=>{
-            console.log("data stored to local storage!");
-            this.state.updateUsername = 2;
+        storeData(email, "@email").then(() => {
+          console.log("data stored to local storage!");
+          this.state.updateUsername = 2;
         });
-        
+
       })
       .catch((error) => {
         console.log(error.code);
@@ -103,34 +103,34 @@ login = (email, password) =>
     console.log(this.state.show2)
   };
 
-  componentDidMount(){
+  componentDidMount() {
 
-    getData("@email").then((data)=>{
+    getData("@email").then((data) => {
+      console.log("parsing letter: ", data);
+      let parsed_mail = data.split(".");
+      this.setState({ username: parsed_mail[0] })
+      //this.username = parsed_mail[0];
+      console.log("name from settings", this.state.username)
+    })
+
+  }
+
+  componentDidUpdate() {
+
+    if (this.state.updateUsername == 2) {
+      getData("@email").then((data) => {
         console.log("parsing letter: ", data);
         let parsed_mail = data.split(".");
-        this.setState({username: parsed_mail[0]})
+        this.setState({ username: parsed_mail[0] })
         //this.username = parsed_mail[0];
         console.log("name from settings", this.state.username)
       })
-      
+      this.state.updateUsername = 1;
+      console.log("updating name")
+    }
+
   }
 
-  componentDidUpdate(){
-    
-    if(this.state.updateUsername == 2 ){
-        getData("@email").then((data)=>{
-            console.log("parsing letter: ", data);
-            let parsed_mail = data.split(".");
-            this.setState({username: parsed_mail[0]})
-            //this.username = parsed_mail[0];
-            console.log("name from settings", this.state.username)
-        })
-        this.state.updateUsername = 1;
-        console.log("updating name")
-    }
-      
-  }
-    
 
   //let colorScheme = useColorScheme();
 
@@ -138,13 +138,13 @@ login = (email, password) =>
     return (
 
       <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.scrollView} fadingEdgeLength={0}  showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
-        
+        <ScrollView style={styles.scrollView} fadingEdgeLength={0} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
+
           <View style={styles.welcomeMsg}>
             <Text style={{ fontSize: 40, fontWeight: "bold", marginTop: 20 }}>Hello {this.state.username}!</Text>
           </View>
           <View style={styles.welcomeMsg}>
-            <Text style={{ fontSize: 18, marginTop: 1,fontWeight: "bold" }}>Here are your settings.</Text>
+            <Text style={{ fontSize: 18, marginTop: 1, fontWeight: "bold" }}>Here are your settings.</Text>
           </View>
           <View style={styles.settingName}>
             <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 20 }}>PROFILE</Text>
@@ -159,12 +159,12 @@ login = (email, password) =>
                 visible={this.state.show}
               >
                 <Container style={styles.containerpopUp}>
-                  <View style={{ flex: 0.3, backgroundColor: "white", marginTop:10 }}>
+                  <View style={{ flex: 0.3, backgroundColor: "white", marginTop: 10 }}>
                     <Pressable
                       onPress={this.hideModal}
                     >
 
-                     <AntDesign name="closecircleo" size={24} color="black" />
+                      <AntDesign name="closecircleo" size={24} color="black" />
 
                     </Pressable>
                   </View>
@@ -226,7 +226,7 @@ login = (email, password) =>
             </Pressable>
           </View>
           <View style={styles.settingName}>
-                <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 10 }}>CONNECT</Text>
+            <Text style={{ fontSize: 17, fontWeight: "bold", marginTop: 10 }}>CONNECT</Text>
           </View>
           <View style={[styles.button, { backgroundColor: '#686868' }]}>
             <Pressable
@@ -245,7 +245,7 @@ login = (email, password) =>
           <View style={[styles.button, { backgroundColor: '#686868' }]}>
             <Pressable
               style={styles.button}
-            
+
             >
               <View style={[styles.text, { backgroundColor: '#686868' }]}>
                 <Text>
@@ -271,14 +271,14 @@ login = (email, password) =>
                             </Text>
               </View>
               <View style={[styles.icon, { backgroundColor: '#686868' }]}>
-              <Ionicons name="md-help-buoy-outline" size={24} color="black" />
+                <Ionicons name="md-help-buoy-outline" size={24} color="black" />
               </View>
             </Pressable>
           </View>
           <View style={[styles.button, { backgroundColor: '#686868' }]}>
             <Pressable
               style={styles.button}
-              
+
               onPress={this.showModal2}
             >
               <View style={[styles.text, { backgroundColor: '#686868' }]}>
@@ -287,35 +287,35 @@ login = (email, password) =>
                             </Text>
               </View>
               <View style={[styles.icon, { backgroundColor: '#686868' }]}>
-                 <Feather name="help-circle" size={24} color="black" />
+                <Feather name="help-circle" size={24} color="black" />
               </View>
             </Pressable>
             <Modal
-            transparent={true}
-            visible={this.state.show2}
-          >  
-           <Container style={styles.containerpopUpSmall}>
-                  <View style={{ flex: 0.3, backgroundColor: "white", marginTop:10 }}>
-                    <Pressable
+              transparent={true}
+              visible={this.state.show2}
+            >
+              <Container style={styles.containerpopUpSmall}>
+                <View style={{ flex: 0.3, backgroundColor: "white", marginTop: 10 }}>
+                  <Pressable
                     onPress={this.hideModal2}
-                    >
+                  >
 
-                     <AntDesign name="closecircleo" size={24} color="black" />
+                    <AntDesign name="closecircleo" size={24} color="black" />
 
-                    </Pressable>
-                  </View>
-                  <View style={{ flex: 0.7, backgroundColor: "white", alignContent: "center", alignItems: "center", marginTop: 0 }}>
-                      <Text style={{ fontSize: 30, color: "#000000", marginLeft: 10 }}>TAPLOCK APP</Text>
-                  </View>
-                  <View style={{ backgroundColor: "white", alignContent: "center", alignItems: "center", marginBottom:50, marginTop: 0}}> 
+                  </Pressable>
+                </View>
+                <View style={{ flex: 0.7, backgroundColor: "white", alignContent: "center", alignItems: "center", marginTop: 0 }}>
+                  <Text style={{ fontSize: 30, color: "#000000", marginLeft: 10 }}>TAPLOCK APP</Text>
+                </View>
+                <View style={{ backgroundColor: "white", alignContent: "center", alignItems: "center", marginBottom: 50, marginTop: 0 }}>
                   <View style={{ backgroundColor: "#FFFFFF", flexDirection: "row" }}>
-                    
+
                     <View style={{ backgroundColor: "#FFFFFF" }}>
-                      <Text style={{ fontSize: 15, color: "#000000", marginLeft: 10,margin:3 }}> V1.0  </Text>
+                      <Text style={{ fontSize: 15, color: "#000000", marginLeft: 10, margin: 3 }}> V1.0  </Text>
                     </View>
                   </View>
                   <View style={{ backgroundColor: "#FFFFFF", flexDirection: "row" }}>
-                    
+
                     <View style={{ backgroundColor: "#FFFFFF" }}>
                       <Text style={{ fontSize: 20, color: "#000000", marginLeft: 10 }}> developed by</Text>
                     </View>
@@ -327,15 +327,15 @@ login = (email, password) =>
                   </View>
                   <View style={{ backgroundColor: "#FFFFFF", flexDirection: "row" }}>
                     <View style={{ backgroundColor: "#FFFFFF" }}>
-                      <Text style={{ fontSize: 15, color: "#000000", marginLeft: 10,margin:5 }}>June 2021</Text>
+                      <Text style={{ fontSize: 15, color: "#000000", marginLeft: 10, margin: 5 }}>June 2021</Text>
                     </View>
                   </View>
-                  </View>
-                </Container>
-          </Modal>
+                </View>
+              </Container>
+            </Modal>
           </View>
-                   
-        
+
+
         </ScrollView>
       </SafeAreaView>
 
@@ -348,8 +348,8 @@ login = (email, password) =>
 
 const styles = StyleSheet.create({
 
- 
- 
+
+
   container: {
     flex: 1,
     paddingHorizontal: 10,
@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
   containerpopUpSmall: {
     paddingHorizontal: 10,
     margin: 60,
-    marginTop: 300,
+    marginTop: 280,
     marginBottom: 290,
     borderRadius: 10,
     backgroundColor: "white",
@@ -417,16 +417,16 @@ const styles = StyleSheet.create({
   text: {
     flex: 0.8,
     fontSize: 20,
-    
+
   },
-  text2:{
-    fontWeight:"bold",
+  text2: {
+    fontWeight: "bold",
   },
   scrollView: {
-    
+
     marginTop: 0,
     marginBottom: 0,
-   
+
   },
   settingName: {
     marginLeft: 10,
@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   welcomeMsg: {
-   marginLeft: 10,
+    marginLeft: 10,
 
   }
 });
