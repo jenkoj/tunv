@@ -11,7 +11,7 @@ import {storeData,getData} from "../storage/storageHandler"
 
 
 var firebaseConfig = {
-  apiKey: "",
+  apiKey: "AIzaSyBsLLrz2GAvKwgj-jiSJ4O-aaWGC-WSyKQ",
   authDomain: "tunvproject.firebaseapp.com",
   projectId: "tunvproject",
   storageBucket: "tunvproject.appspot.com",
