@@ -10,26 +10,26 @@ App developed for app dev class.
 * ble
 * async communication with ble device
 
-## device screen
+## Device screen
 <p float="center">
   <img src="/screenshots/IMG_0401.jpg" width="250" />
   <img src="/screenshots/IMG_0402.PNG" width="250" /> 
   <img src="/screenshots/IMG_0403.PNG" width="250" />
 </p>
 
-## maps screen
+## Maps screen
 <p float="center">
   <img src="/screenshots/IMG_0405.PNG" width="250" />
 </p>
 
-## settings screen 
+## Settings screen 
 <p float="center">
   <img src="/screenshots/IMG_0406.PNG" width="250" />
   <img src="/screenshots/IMG_0407.PNG" width="250" /> 
   <img src="/screenshots/IMG_0408.PNG" width="250" />
 </p>
 
-## demo 
+## Demo 
 slowed down because 60fps is played back at 24fps i think
 
 <p float="center">
@@ -38,7 +38,7 @@ slowed down because 60fps is played back at 24fps i think
   <img src=https://user-images.githubusercontent.com/52485152/122727006-de26f100-d276-11eb-87b4-4398a951f1c4.mp4 width="250" />
 </p>
 
-## full demo 
+## Full demo 
 https://www.hackster.io/taplock/taplock-a-bike-lock-with-machine-learning-85641c
 
 
