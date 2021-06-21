@@ -19,4 +19,21 @@ screenshots of settings screen
   <img src="/screenshots/IMG_0407.PNG" width="250" /> 
   <img src="/screenshots/IMG_0408.PNG" width="250" />
 </p>
+<p float="center">
+  <img src=https://user-images.githubusercontent.com/52485152/122726991-d9623d00-d276-11eb-8aeb-d9d079fa1451.mp4 width="250" />
+  <img src=https://user-images.githubusercontent.com/52485152/122727005-dc5d2d80-d276-11eb-9010-b0a92dc3b4b4.mp4 width="250" /> 
+  <img src=https://user-images.githubusercontent.com/52485152/122727006-de26f100-d276-11eb-87b4-4398a951f1c4.mp4 width="250" />
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
 
