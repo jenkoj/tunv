@@ -9,6 +9,7 @@ App developed for app dev class.
 * persitent async storage
 * ble
 * async communication with ble device
+* automatic connection to ble device
 
 ## Device screen
 <p float="center">
