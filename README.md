@@ -30,7 +30,7 @@ App developed for app dev class.
 </p>
 
 ## demo 
-* (slowed down because 60fps is played back at 24fps i think)
+slowed down because 60fps is played back at 24fps i think
 
 <p float="center">
   <img src=https://user-images.githubusercontent.com/52485152/122726991-d9623d00-d276-11eb-8aeb-d9d079fa1451.mp4 width="250" />
