@@ -1,12 +1,12 @@
-import React,{useCallback, useEffect, useMemo, useState, useRef} from 'react';
-import { Pressable, StyleSheet, Image, Button, Modal } from 'react-native';
+import React,{useCallback, useEffect, useMemo, useState} from 'react';
+import { Pressable, StyleSheet, Modal } from 'react-native';
 import { Text, View } from '../components/Themed';
 import { Foundation } from '@expo/vector-icons'; 
 import { useColorScheme } from 'react-native-appearance';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {storeData,getData} from "../storage/storageHandler"
-import {BleManager, Device, State} from 'react-native-ble-plx';
+import {Device, State} from 'react-native-ble-plx';
 import scanner from '../components/ble/scanner';
 import Geolocation from '@react-native-community/geolocation';
 import { AntDesign } from '@expo/vector-icons'; 
@@ -43,7 +43,7 @@ const deviceScreen = () => {
   //timer
   const [timerState,setTrigerTimer] = useState<boolean>(false);
   //ids and con
-  const [selID, setSelID] = useState<string>("0000180f-0000-1000-8000-00805f9b34fb");
+  const [selID, setSelID] = useState<string>("5231F26B-1C63-1BB7-6268-7F327180BB94");
   //popup
   const [popUp, setpopUpState] = useState(false);
   //loc
@@ -173,7 +173,9 @@ useEffect(()=>{
    //program will detect devices with pre spefified local name
    console.log("found lock:",devices[0].id)
    console.log("connecting to this one")
-   conn(devices[0].id)
+   conn(devices[0].id).catch(e=>{
+    console.log("device not in reach")
+  });
   }
   if(!rendered2){
     setRendered2(true)
@@ -191,10 +193,14 @@ useEffect(()=>{
    }else{
     setIconStyle("unlink")
     console.log("trying to reconect!!")
-    conn(devices[0].id);
+    conn(devices.id).catch(e=>{
+      console.log("device not in reach")
+    });
    }
 
-  read("force read");
+  read("force read").catch(e=>{
+    console.log("device not in reach")
+  });
 
   }
   if(!rendered3){
@@ -230,9 +236,10 @@ useEffect(()=>{
     console.log("cant read not conn!")
     setDeviceConnected(false)
   });
-  write("MQQQ").catch(e =>{
-    console.log("cant write not connected!")
-  })
+  // write("MQQQ").catch(e =>{
+  //   console.log("cant write not connected!")
+  //   setDeviceConnected(false)
+  // })
 
 }, [timerState]);
 
@@ -241,6 +248,7 @@ useEffect(()=>{
 
 const interval = setInterval(()=>{
   //trigerTimer(timerState+1)
+  
   if(timerState == true){
     console.log("if stavek true",timerState)
     setTrigerTimer(false)
@@ -249,7 +257,7 @@ const interval = setInterval(()=>{
     setTrigerTimer(true)
   }
   console.log("timer state         :", timerState)
-}, 100000); //debug! 
+}, 3000); //debug! 
 return () => clearInterval(interval);
    
 });
@@ -261,11 +269,17 @@ const toggleLock= useCallback(() => {
   console.log('toggleStarted');
   let state
   if (locked) {
-    write("1")
+    write("1").catch(e =>{
+      console.log("not conn")
+      setDeviceConnected(false)
+    })
     console.log("lock")
   
   } else {  
-    write("0")
+    write("0").catch(e =>{
+      console.log("not conn")
+      setDeviceConnected(false)
+    })
     console.log("unlock")
   }
 }, [locked]);

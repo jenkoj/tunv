@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:test.swift">
+   </FileRef>
+   <FileRef
       location = "group:tunvproj.xcodeproj">
    </FileRef>
    <FileRef

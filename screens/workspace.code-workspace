@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "tunv",
+			"path": ".."
+		},
+		{
+			"name": "screenshots",
+			"path": "../../../branch expo/tunv/screenshots"
+		}
+	],
+	"settings": {}
+}

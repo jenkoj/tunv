@@ -71,9 +71,11 @@ login = (email, password) =>
       .then(() => {
         console.log('Login successful.');
         alert('Login successful.');
+        this.hideModal()
         storeData(email,"@email").then(()=>{
             console.log("data stored to local storage!");
             this.state.updateUsername = 2;
+            this.forceUpdate()
         });
         
       })

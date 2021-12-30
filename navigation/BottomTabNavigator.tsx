@@ -34,6 +34,7 @@ export default function BottomTabNavigator() {
     letter = "U";
   })
 
+
   
 //define all three screens add icons to navigation and header bar
   return (

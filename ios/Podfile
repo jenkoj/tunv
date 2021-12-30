@@ -2,7 +2,7 @@ require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/react-native-unimodules/cocoapods.rb'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '11.0'
+platform :ios, '15.0'
 
 target 'tunvproj' do
   use_unimodules!
@@ -16,7 +16,7 @@ target 'tunvproj' do
   pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
   pod 'Permission-AppTrackingTransparency', :path => "#{permissions_path}/AppTrackingTransparency"
-
+  pod 'MultiplatformBleAdapter', :git => 'https://github.com/below/MultiPlatformBleAdapter'
 
   # Uncomment the code below to enable Flipper.
   #

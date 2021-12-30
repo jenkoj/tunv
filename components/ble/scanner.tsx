@@ -61,9 +61,15 @@ export default () => {
 
               if (device) {
                 
-                if (device.localName == "MI1S" && device.id != lastDetectedDevice){
-                //if (device.localName == "tap-lock" && device.id != lastDetectedDevice){
+                //if (device.localName == "MI1S" && device.id != lastDetectedDevice){
+                console.log("--------------------names:")
+                console.log(device.name)
+                console.log(device.localName)
+                console.log(device.id)
+                console.log("--------------------end:")
+                if (device.localName == "taplock" ){//&& device.id != lastDetectedDevice){
                 //if (device.id != lastDetectedDevice){
+                  
                   //detect only arduino
                   observer.onDeviceDetected(device);
                   lastDetectedDevice = device.id
@@ -176,7 +182,7 @@ export default () => {
             .then(characteristic=>{                    
                 let buffer = Buffer.from(characteristic.value,'base64'); 
                 let bleValue = buffer.toJSON().data.toString() 
-                //console.log('read success',bleValue );
+                console.log('***************read success',bleValue );
                 //when reading periodic, check if value has changed!
                 console.log("comparing lastValue",lastValue,"and",bleValue[0])
 
@@ -191,6 +197,7 @@ export default () => {
                 }else{
                   console.log("read value is the same as stored one, skipping!")
                 }
+                lastValue = bleValue[0]
                 resolve(bleValue);  
             },error=>{
                 console.log('read fail: ',error);
@@ -207,7 +214,7 @@ function write(value:string){
   let Buffer = require("buffer").Buffer;
   let formatValue = new Buffer(value).toString("base64");
   
-  //for mi only! remove arrays for write chrachetirstics
+  //for mi only! remove arrays for write chrachetirstics add for arduino
   return new Promise( (resolve, reject) =>{      
       bleManager.writeCharacteristicWithResponseForDevice(deviceVals.vals.id,deviceVals.services.writeWithResponseServiceUUID[0].toString(), 
       deviceVals.services.writeWithResponseCharacteristicUUID[0].toString(),formatValue)
