@@ -48,18 +48,21 @@ slowed down because 60fps is played back at 24fps i think
 Application part:
 
 <p float="center">
-  <img src=https://user-images.githubusercontent.com/52485152/147857644-fe54b257-06fa-4606-85e0-2558a8007690.mp4 width="250" />
+  <img src=https://user-images.githubusercontent.com/52485152/147857873-a81aa231-ebc6-42cf-a378-d1cdc8f92ec0.mp4 width="500" />
 </p>
 
 Build:
 
 <p float="center">
-    <img src=https://user-images.githubusercontent.com/52485152/147857659-37f8b0ab-6848-426f-bea8-fcb1cd29bb3a.mp4 width="250" />
+    <img src=https://user-images.githubusercontent.com/52485152/147857659-37f8b0ab-6848-426f-bea8-fcb1cd29bb3a.mp4 width="500" />
 </p>
 
 
 ## Full demo 
 https://www.hackster.io/taplock/taplock-a-bike-lock-with-machine-learning-85641c
+
+
+
 
 
 
