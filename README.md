@@ -58,9 +58,13 @@ Build:
 </p>
 
 
-## Full demo 
+## Full demos
+
+Blog:
 https://www.hackster.io/taplock/taplock-a-bike-lock-with-machine-learning-85641c
 
+Physical lock:
+https://youtu.be/WWhBr2s0ySs
 
 
 
