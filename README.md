@@ -48,13 +48,16 @@ slowed down because 60fps is played back at 24fps i think
 Application part:
 
 <p float="center">
-  <img src=https://user-images.githubusercontent.com/52485152/147857873-a81aa231-ebc6-42cf-a378-d1cdc8f92ec0.mp4 width="500" />
+  <img src=https://user-images.githubusercontent.com/52485152/147857902-57fedb9b-12b1-41de-a144-f25c58883632.mov width="600" />
 </p>
+
+
+
 
 Build:
 
 <p float="center">
-    <img src=https://user-images.githubusercontent.com/52485152/147857659-37f8b0ab-6848-426f-bea8-fcb1cd29bb3a.mp4 width="500" />
+    <img src=https://user-images.githubusercontent.com/52485152/147857659-37f8b0ab-6848-426f-bea8-fcb1cd29bb3a.mp4 width="600" />
 </p>
 
 
