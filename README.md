@@ -48,11 +48,8 @@ slowed down because 60fps is played back at 24fps i think
 Application part:
 
 <p float="center">
-  <img src=https://user-images.githubusercontent.com/52485152/147857902-57fedb9b-12b1-41de-a144-f25c58883632.mov width="600" />
+  <img src=https://user-images.githubusercontent.com/52485152/147858025-e89f97f6-8136-44cb-a637-6539a2324a02.mov width="600" />
 </p>
-
-
-
 
 Build:
 
