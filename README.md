@@ -39,8 +39,40 @@ slowed down because 60fps is played back at 24fps i think
   <img src=https://user-images.githubusercontent.com/52485152/122727006-de26f100-d276-11eb-87b4-4398a951f1c4.mp4 width="250" />
 </p>
 
-## Full demo 
+## Physical lock demo
+
+- Application is in sync with the lock. It updates the state if lock us state is chagned with tapping.
+- Lock has two physical buttons but they can be only used to lock. 
+- Lock locks automaticly after 2 minutes. It does not lock when lock is moving. 
+
+Application part:
+
+<p float="center">
+  <img src=https://user-images.githubusercontent.com/52485152/147858025-e89f97f6-8136-44cb-a637-6539a2324a02.mov width="600" />
+</p>
+
+Build:
+
+<p float="center">
+    <img src=https://user-images.githubusercontent.com/52485152/147857659-37f8b0ab-6848-426f-bea8-fcb1cd29bb3a.mp4 width="600" />
+</p>
+
+
+## Full demos
+
+Blog:
 https://www.hackster.io/taplock/taplock-a-bike-lock-with-machine-learning-85641c
+
+Physical lock:
+https://youtu.be/WWhBr2s0ySs
+
+
+
+
+
+
+
+
 
 
 
